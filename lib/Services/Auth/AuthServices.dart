@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:scrapper/Models/UserModel/UserModel01.dart';
+import 'package:scrapper/Services/UserServices01/UserServices01.dart';
 
 class AuthServices {
   static final AuthServices _instance = AuthServices._internal();
@@ -23,21 +25,17 @@ class AuthServices {
 
     await _auth.verifyPhoneNumber(
       phoneNumber: number,
-
       verificationCompleted: (PhoneAuthCredential cred) async {
         await _auth.signInWithCredential(cred);
         completer.complete();
       },
-
       verificationFailed: (FirebaseAuthException e) {
         completer.completeError(e);
       },
-
       codeSent: (String verificationId, int? resendToken) {
         _verificationId = verificationId;
         completer.complete();
       },
-
       codeAutoRetrievalTimeout: (String verificationId) {
         _verificationId = verificationId;
       },
@@ -53,11 +51,29 @@ class AuthServices {
       smsCode: otp,
     );
 
-    final result = await _auth.signInWithCredential(credential);
-    return result.user;
+    return await _auth.signInWithCredential(credential).then((e) {
+      final user = UserModel01(
+        uid: e.user!.uid,
+        displayName: e.user?.displayName,
+        phoneNumber: e.user?.phoneNumber,
+        email: e.user?.email,
+      );
+      UserServices01().createUser(user);
+      return e.user;
+    });
   }
 
   Future<void> logout() async => await _auth.signOut();
 
+  /// This returns a optional user
   User? get currUser => _auth.currentUser;
+
+  /// This returns a confirm user but will throw if not logged in
+  // User get user {
+  //   final user = _auth.currentUser;
+  //   if (user == null) {
+  //     throw Exception("User not logged in");
+  //   }
+  //   return user;
+  // }
 }
