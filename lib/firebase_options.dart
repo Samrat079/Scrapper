@@ -59,4 +59,5 @@ class DefaultFirebaseOptions {
     projectId: 'scrapper-079',
     storageBucket: 'scrapper-079.firebasestorage.app',
   );
+
 }
