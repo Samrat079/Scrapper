@@ -10,9 +10,9 @@ class LoginScreen01 extends StatelessWidget {
   Widget build(BuildContext context) {
     final _controller = PageController(initialPage: 0);
     return Scaffold(
-      appBar: AppBar(title: Text('Login page')),
       body: PageView(
         controller: _controller,
+        physics: NeverScrollableScrollPhysics(),
         scrollDirection: Axis.vertical,
         children: [AddNumber01(controller: _controller,), AddOtp01()],
       ),

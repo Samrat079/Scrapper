@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:scrapper/Services/Auth/AuthServices.dart';
-
-import '../../Custome/CardColumn01/CardColumn01.dart';
+import 'package:scrapper/Widgets/Custome/CenterColumn01/CenterColumn01.dart';
 
 class AddOtp01 extends StatefulWidget {
   const AddOtp01({super.key});
@@ -24,14 +24,13 @@ class _AddOtp01State extends State<AddOtp01> {
     if (_otpController.currentState?.saveAndValidate() ?? false) {
       final otp = _otpController.currentState?.fields['Otp']?.value;
 
-      try {
-        await AuthServices().verifyOtp(otp);
-        Navigator.pushReplacementNamed(context, '/profile');
-      } on FirebaseAuthException catch (e) {
-        _otpController.currentState?.fields['Otp']?.invalidate(
-          e.message.toString(),
-        );
-      }
+      AuthServices()
+          .verifyOtp(otp)
+          .then((_) => Navigator.pushReplacementNamed(context, '/profile'))
+          .onError<FirebaseAuthException>(
+            (e, stackTrace) => _otpController.currentState?.fields['Otp']
+                ?.invalidate(e.message.toString()),
+          );
     }
   }
 
@@ -39,34 +38,46 @@ class _AddOtp01State extends State<AddOtp01> {
   Widget build(BuildContext context) {
     return FormBuilder(
       key: _otpController,
-      child: CardColumn01(
+      child: CenterColumn01(
         children: [
+          Image.asset('assets/Illustrations/otp01.png', height: 256),
+          SizedBox(height: 16),
+
           Text(
             'Please add otp',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
 
-          SizedBox(height: 32),
+          SizedBox(height: 20),
 
-          FormBuilderTextField(
+          FormBuilderField(
             name: 'Otp',
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              labelText: 'Otp',
-              hintText: '232323',
-              prefixIcon: Icon(Icons.message_outlined),
-              border: OutlineInputBorder(),
-              errorMaxLines: 3,
-            ),
-            validator: FormBuilderValidators.compose([
-              FormBuilderValidators.required(),
-              FormBuilderValidators.numeric(),
-              FormBuilderValidators.maxLength(6),
-            ]),
+            builder: (field) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  MaterialPinField(
+                    key: ValueKey(field.errorText),
+                    length: 6,
+                    onChanged: (otp) => field.didChange(otp),
+                    theme: MaterialPinTheme(cellSize: Size(40, 46)),
+                  ),
+
+                  const SizedBox(height: 2),
+                  Text(
+                    field.errorText ?? '',
+                    style: TextStyle(
+                      fontStyle: FontStyle.italic,
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
 
-          SizedBox(height: 32),
+          SizedBox(height: 16),
 
           ElevatedButton(
             onPressed: submitHandler,

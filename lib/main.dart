@@ -17,8 +17,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       initialRoute: '/',
       onGenerateRoute: RouteGen.generateRoute,
-      theme: ThemeData.light(),
-      darkTheme: ThemeData.dark(),
+      theme: ThemeData(
+        brightness: Brightness.light,
+        colorSchemeSeed: const Color.fromRGBO(20, 242, 0, 1),
+      ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        colorSchemeSeed: const Color.fromRGBO(20, 242, 0, 1),
+      ),
       themeMode: ThemeMode.system,
     );
   }

@@ -10,7 +10,10 @@ class HomeScreen01 extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(),
       body: CenterColumn01(
-        children: [Text('Home test'), Text('This is the second')],
+        children: [
+          Text('Home test', textAlign: TextAlign.center),
+          Text('This is the second', textAlign: TextAlign.center),
+        ],
       ),
       drawer: Drawer01(),
     );

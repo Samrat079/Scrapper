@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_intl_phone_field/flutter_intl_phone_field.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:scrapper/Services/Auth/AuthServices.dart';
 import 'package:scrapper/Widgets/Custome/CardColumn01/CardColumn01.dart';
+import 'package:scrapper/Widgets/Custome/CenterColumn01/CenterColumn01.dart';
 
 class AddNumber01 extends StatefulWidget {
   final PageController _controller;
@@ -35,8 +35,8 @@ class _AddNumber01State extends State<AddNumber01> {
             ),
           )
           .onError<FirebaseAuthException>(
-            (error, stackTrace) => _addNumberKey.currentState?.fields['Phone']
-                ?.invalidate(error.message.toString()),
+            (e, stackTrace) => _addNumberKey.currentState?.fields['Phone']
+                ?.invalidate(e.message.toString()),
           );
     }
   }
@@ -45,15 +45,17 @@ class _AddNumber01State extends State<AddNumber01> {
   Widget build(BuildContext context) {
     return FormBuilder(
       key: _addNumberKey,
-      child: CardColumn01(
+      child: CenterColumn01(
         children: [
+          Image.asset('assets/Illustrations/login02.png', height: 256),
+          SizedBox(height: 16),
           Text(
             'Verify Phone number',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
 
-          SizedBox(height: 32),
+          SizedBox(height: 20),
 
           FormBuilderField(
             name: 'Phone',
@@ -65,7 +67,9 @@ class _AddNumber01State extends State<AddNumber01> {
                 decoration: InputDecoration(
                   labelText: 'Phone',
                   hintText: '888-444-6464',
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(90),
+                  ),
                   errorText: field.errorText,
                   errorMaxLines: 3,
                   errorStyle: TextStyle(fontStyle: FontStyle.italic),
@@ -74,7 +78,7 @@ class _AddNumber01State extends State<AddNumber01> {
             },
           ),
 
-          SizedBox(height: 32),
+          SizedBox(height: 16),
 
           ElevatedButton(
             onPressed: submitHandler,
