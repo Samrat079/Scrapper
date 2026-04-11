@@ -27,11 +27,11 @@ jobs:
         run: flutter pub get
 
       - name: Build Apk
-        run: flutter build apk --release
+        run: flutter build apk --release --build-name=0.0${{ github.run_number }} --build-number=${{ github.run_number }}
 
       - name: make the release
         uses: ncipollo/release-action@v1
         with:
           artifacts: 'build/app/outputs/flutter-apk/app-release.apk'
-          tag: v1.0.${{ github.run_number }}
+          tag: v0.0.${{ github.run_number }}
           token: ${{ secrets.GITHUB_TOKEN }}
