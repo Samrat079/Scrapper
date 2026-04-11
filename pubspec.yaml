@@ -41,6 +41,7 @@ dependencies:
   form_builder_validators: ^11.3.0
   flutter_intl_phone_field: ^0.0.7
   pin_code_fields: ^9.3.0
+  timeago: ^3.7.1
 
 dev_dependencies:
   flutter_test:

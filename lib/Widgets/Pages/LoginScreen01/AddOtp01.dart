@@ -6,7 +6,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:scrapper/Services/Auth/AuthServices.dart';
-import 'package:scrapper/Widgets/Custome/CenterColumn01/CenterColumn01.dart';
+
+import '../../Custome/CenterColumn/CenterColumn01.dart';
 
 class AddOtp01 extends StatefulWidget {
   const AddOtp01({super.key});
@@ -26,7 +27,7 @@ class _AddOtp01State extends State<AddOtp01> {
 
       AuthServices()
           .verifyOtp(otp)
-          .then((_) => Navigator.pushReplacementNamed(context, '/profile'))
+          .then((e) => Navigator.pushReplacementNamed(context, '/profile', arguments: e?.uid))
           .onError<FirebaseAuthException>(
             (e, stackTrace) => _otpController.currentState?.fields['Otp']
                 ?.invalidate(e.message.toString()),

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:scrapper/Services/Auth/AuthServices.dart';
 
 class Drawer01 extends StatelessWidget {
   const Drawer01({super.key});
@@ -12,7 +13,11 @@ class Drawer01 extends StatelessWidget {
         children: [
           ListTile(
             title: Text('Profile'),
-            onTap: () => Navigator.pushNamed(context, '/profile'),
+            onTap: () => Navigator.pushNamed(
+              context,
+              '/profile',
+              arguments: AuthServices().currUser?.uid,
+            ),
           ),
           ListTile(
             title: Text('Login'),

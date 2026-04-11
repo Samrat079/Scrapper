@@ -52,12 +52,12 @@ class AuthServices {
     );
 
     return await _auth.signInWithCredential(credential).then((e) {
-      final user = UserModel01(
-        uid: e.user!.uid,
-        displayName: e.user?.displayName,
-        phoneNumber: e.user?.phoneNumber,
-        email: e.user?.email,
-      );
+      final user = UserModel01.fromJson({
+        'uid': e.user!.uid,
+        'displayName': e.user!.displayName,
+        'phoneNumber': e.user!.phoneNumber,
+        'email': e.user!.email,
+      });
       UserServices01().createUser(user);
       return e.user;
     });

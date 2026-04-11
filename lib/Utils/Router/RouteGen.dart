@@ -31,7 +31,7 @@ class RouteGen {
 
     switch (name) {
       case '/profile':
-        return router(ProfileScreen01());
+        return router(ProfileScreen01(uid: args as String));
     }
 
     return router(ErrorScreen01());

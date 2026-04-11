@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:scrapper/Widgets/Custome/CenterColumn01/CenterColumn01.dart';
 import 'package:scrapper/Widgets/Custome/Drawers/Drawer01.dart';
+
+import '../../Custome/CenterColumn/CenterColumn01.dart';
 
 class HomeScreen01 extends StatelessWidget {
   const HomeScreen01({super.key});

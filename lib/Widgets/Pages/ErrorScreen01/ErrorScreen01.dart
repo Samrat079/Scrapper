@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:scrapper/Widgets/Custome/CenterColumn01/CenterColumn01.dart';
+
+import '../../Custome/CenterColumn/CenterColumn01.dart';
 
 class ErrorScreen01 extends StatelessWidget {
   const ErrorScreen01({super.key});

@@ -4,8 +4,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_intl_phone_field/flutter_intl_phone_field.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:scrapper/Services/Auth/AuthServices.dart';
-import 'package:scrapper/Widgets/Custome/CardColumn01/CardColumn01.dart';
-import 'package:scrapper/Widgets/Custome/CenterColumn01/CenterColumn01.dart';
+
+import '../../Custome/CenterColumn/CenterColumn01.dart';
 
 class AddNumber01 extends StatefulWidget {
   final PageController _controller;
