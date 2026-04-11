@@ -1,20 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:scrapper/Models/UserModel/UserModel01.dart';
+import 'package:scrapper/Models/Customer/Customer01.dart';
 
-class UserServices01 {
-  static final UserServices01 _instance = UserServices01._internal();
+class Customer01Services {
+  static final Customer01Services _instance = Customer01Services._internal();
 
-  UserServices01._internal();
+  Customer01Services._internal();
 
-  factory UserServices01() {
+  factory Customer01Services() {
     return _instance;
   }
 
   final CollectionReference _users = FirebaseFirestore.instance.collection(
-    'users',
+    'customers',
   );
 
-  Future<void> createUser(UserModel01 user) async {
+  Future<void> createUser(Customer01 user) async {
     return await _users
         .doc(user.uid)
         .set(user.toJson(), SetOptions(merge: true))
@@ -28,11 +28,11 @@ class UserServices01 {
         .catchError((e) => print('test failed: $e'));
   }
 
-  Future<UserModel01> getUserById(String uid) async {
+  Future<Customer01> getUserById(String uid) async {
     return await _users
         .doc(uid)
         .get()
-        .then((e) => UserModel01.fromJson(e.data() as Map<String, dynamic>))
+        .then((e) => Customer01.fromJson(e.data() as Map<String, dynamic>))
         .catchError((e) => print('cant get doc:$e'));
   }
 }

@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:scrapper/Models/UserModel/UserModel01.dart';
 import 'package:scrapper/Services/Auth/AuthServices.dart';
-import 'package:scrapper/Services/UserServices01/UserServices01.dart';
-import 'package:scrapper/Widgets/Custome/CardColumn/CardColumn02.dart';
+import 'package:scrapper/Services/CustomerServices/Customer01Services.dart';
 import 'package:scrapper/Widgets/Custome/CardList01/CardList01.dart';
-import 'package:scrapper/Widgets/Custome/CenterColumn/CenterColumb02.dart';
 import 'package:scrapper/Widgets/Custome/CenterColumn/ScrollColumn01.dart';
 import 'package:scrapper/Widgets/Custome/FutureBuilder01/FutureBuilder01.dart';
-import 'package:scrapper/Widgets/Pages/ProfileScreen01/Widgets/ListTile02.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class ProfileScreen01 extends StatelessWidget {
@@ -20,7 +16,7 @@ class ProfileScreen01 extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(),
       body: FutureBuilder01(
-        future: UserServices01().getUserById(uid),
+        future: Customer01Services().getUserById(uid),
         child: (context, data) {
           return ScrollColumn01(
             children: [

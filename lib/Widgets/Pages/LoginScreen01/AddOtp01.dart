@@ -10,7 +10,10 @@ import 'package:scrapper/Services/Auth/AuthServices.dart';
 import '../../Custome/CenterColumn/CenterColumn01.dart';
 
 class AddOtp01 extends StatefulWidget {
-  const AddOtp01({super.key});
+  final PageController _controller;
+
+  const AddOtp01({super.key, required PageController controller})
+    : _controller = controller;
 
   @override
   State<AddOtp01> createState() => _AddOtp01State();
@@ -27,7 +30,13 @@ class _AddOtp01State extends State<AddOtp01> {
 
       AuthServices()
           .verifyOtp(otp)
-          .then((e) => Navigator.pushReplacementNamed(context, '/profile', arguments: e?.uid))
+          .then(
+            (e) => Navigator.pushReplacementNamed(
+              context,
+              '/profile',
+              arguments: e?.uid,
+            ),
+          )
           .onError<FirebaseAuthException>(
             (e, stackTrace) => _otpController.currentState?.fields['Otp']
                 ?.invalidate(e.message.toString()),

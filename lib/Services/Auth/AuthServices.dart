@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:scrapper/Models/UserModel/UserModel01.dart';
-import 'package:scrapper/Services/UserServices01/UserServices01.dart';
+import 'package:scrapper/Models/Customer/Customer01.dart';
+import 'package:scrapper/Services/CustomerServices/Customer01Services.dart';
 
 class AuthServices {
   static final AuthServices _instance = AuthServices._internal();
@@ -52,13 +52,14 @@ class AuthServices {
     );
 
     return await _auth.signInWithCredential(credential).then((e) {
-      final user = UserModel01.fromJson({
+      final user = Customer01.fromJson({
         'uid': e.user!.uid,
         'displayName': e.user!.displayName,
         'phoneNumber': e.user!.phoneNumber,
         'email': e.user!.email,
+        'photoUrl': e.user!.photoURL,
       });
-      UserServices01().createUser(user);
+      Customer01Services().createUser(user);
       return e.user;
     });
   }

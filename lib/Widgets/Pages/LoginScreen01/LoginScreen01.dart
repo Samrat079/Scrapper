@@ -14,7 +14,7 @@ class LoginScreen01 extends StatelessWidget {
         controller: _controller,
         physics: NeverScrollableScrollPhysics(),
         scrollDirection: Axis.vertical,
-        children: [AddNumber01(controller: _controller,), AddOtp01()],
+        children: [AddNumber01(controller: _controller,), AddOtp01(controller: _controller,)],
       ),
     );
   }

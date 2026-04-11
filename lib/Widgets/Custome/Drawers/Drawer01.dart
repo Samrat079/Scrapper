@@ -12,6 +12,7 @@ class Drawer01 extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           ListTile(
+            leading: Icon(Icons.person_outline),
             title: Text('Profile'),
             onTap: () => Navigator.pushNamed(
               context,
@@ -19,13 +20,21 @@ class Drawer01 extends StatelessWidget {
               arguments: AuthServices().currUser?.uid,
             ),
           ),
+          // ListTile(
+          //   title: Text('Login'),
+          //   onTap: () => Navigator.pushNamed(context, '/login'),
+          // ),
           ListTile(
-            title: Text('Login'),
-            onTap: () => Navigator.pushNamed(context, '/login'),
-          ),
-          ListTile(
+            leading: Icon(Icons.error_outline),
             title: Text('Error'),
             onTap: () => Navigator.pushNamed(context, '/error'),
+          ),
+          ListTile(
+            iconColor: Theme.of(context).colorScheme.error,
+            textColor: Theme.of(context).colorScheme.error,
+            leading: Icon(Icons.logout_outlined),
+            title: Text('Login'),
+            onTap: () => AuthServices().logout(),
           ),
         ],
       ),
