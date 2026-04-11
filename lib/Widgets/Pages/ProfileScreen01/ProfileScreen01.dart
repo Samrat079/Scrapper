@@ -20,7 +20,6 @@ class ProfileScreen01 extends StatelessWidget {
         child: (context, data) {
           return ScrollColumn01(
             children: [
-
               /// User profile section
               Row(
                 spacing: 12,

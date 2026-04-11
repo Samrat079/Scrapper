@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Customer01 {
   final String uid, displayName, phoneNumber, email, photoUrl;
   final Timestamp createdAt;
+  // final User auth;
 
   Customer01({
     required this.uid,
@@ -11,6 +13,7 @@ class Customer01 {
     required this.email,
     required this.createdAt,
     required this.photoUrl,
+    // required this.auth,
   });
 
   factory Customer01.fromJson(Map<String, dynamic> json) {
@@ -20,7 +23,10 @@ class Customer01 {
       phoneNumber: json['phoneNumber'] ?? 'Phone number not verified',
       email: json['email'] ?? 'Email not varified',
       createdAt: json['createdAt'] ?? Timestamp.now(),
-      photoUrl: json['photoUrl'] ?? 'https://placehold.co/256x256/darkgreen/white.png?text=test',
+      photoUrl:
+          json['photoUrl'] ??
+          'https://placehold.co/256x256/darkgreen/white.png?text=test',
+      // auth: json as User,
     );
   }
 
@@ -32,6 +38,7 @@ class Customer01 {
       'email': email,
       'createdAt': createdAt,
       'photoUrl': photoUrl,
+      // 'auth': auth,
     };
   }
 }
