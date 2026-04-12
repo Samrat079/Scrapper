@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:scrapper/Services/Auth/AuthServices.dart';
 import 'package:scrapper/Services/CustomerServices/Customer01Services.dart';
@@ -24,10 +25,19 @@ class ProfileScreen01 extends StatelessWidget {
               Row(
                 spacing: 12,
                 children: [
-                  CircleAvatar(
-                    radius: 54,
-                    backgroundImage: NetworkImage(data.photoUrl),
+                  /// Profile image
+                  CachedNetworkImage(
+                    imageUrl: data.photoUrl,
+                    imageBuilder: (context, imageProvider) => CircleAvatar(
+                      radius: 30,
+                      backgroundImage: imageProvider,
+                    ),
+                    placeholder: (context, url) => CircleAvatar(
+                      radius: 30,
+                      child: Icon(Icons.person_outline),
+                    ),
                   ),
+
                   Text(
                     data.displayName,
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -39,40 +49,68 @@ class ProfileScreen01 extends StatelessWidget {
               CardList01(
                 children: [
                   ListTile(
-                    leading: Text('Phone', style: TextStyle(fontSize: 14)),
-                    trailing: Text(
-                      data.phoneNumber,
-                      style: TextStyle(fontSize: 14),
-                    ),
+                    leading: Icon(Icons.phone_outlined),
+                    title: Text('Phone number'),
+                    subtitle: Text(data.phoneNumber),
+                    // trailing: Icon(Icons.edit_outlined),
                   ),
                   ListTile(
-                    leading: Text('Email', style: TextStyle(fontSize: 14)),
-                    trailing: Text(data.email, style: TextStyle(fontSize: 14)),
+                    leading: Icon(Icons.email_outlined),
+                    title: Text('Email'),
+                    subtitle: Text(data.email),
+                    // trailing: Icon(Icons.edit_outlined),
                   ),
                   ListTile(
-                    leading: Text(
-                      'User since: ',
-                      style: TextStyle(fontSize: 14),
-                    ),
-                    trailing: Text(
-                      timeago.format(data.createdAt.toDate()),
-                      style: TextStyle(fontSize: 14),
-                    ),
+                    leading: Icon(Icons.timer_outlined),
+                    title: Text('Member since'),
+                    subtitle: Text(timeago.format(data.createdAt.toDate())),
+                  ),
+                ],
+              ),
+
+              ///My orders card
+              CardList01(
+                children: [
+                  ListTile(
+                    title: Text('My Orders'),
+                    leading: Icon(Icons.book_outlined),
+                    trailing: Icon(Icons.arrow_forward_ios_outlined),
+                  ),
+                  ListTile(
+                    title: Text('Saved address'),
+                    leading: Icon(Icons.house_outlined),
+                    trailing: Icon(Icons.arrow_forward_ios_outlined),
                   ),
                 ],
               ),
 
               /// Profile options
-              ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Theme.of(context).colorScheme.error,
-                ),
-                onPressed: () {
-                  AuthServices().logout();
-                  Navigator.pop(context);
-                },
-                icon: Icon(Icons.logout_outlined),
-                label: Text('Logout'),
+              CardList01(
+                children: [
+                  ListTile(
+                    leading: Icon(Icons.edit_outlined),
+                    title: Text('Edit Profile'),
+                    trailing: Icon(Icons.arrow_forward_ios_outlined),
+                  ),
+                  ListTile(
+                    textColor: Theme.of(context).colorScheme.error,
+                    iconColor: Theme.of(context).colorScheme.error,
+                    leading: Icon(Icons.logout_outlined),
+                    title: Text('Logout'),
+                    onTap: () {
+                      AuthServices().logout().then(
+                        (_) => Navigator.pop(context),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    textColor: Theme.of(context).colorScheme.error,
+                    iconColor: Theme.of(context).colorScheme.error,
+                    leading: Icon(Icons.delete_outline),
+                    title: Text('Delete profile'),
+                    onTap: () => AuthServices().currUser?.delete(),
+                  ),
+                ],
               ),
             ],
           );

@@ -42,6 +42,7 @@ dependencies:
   flutter_intl_phone_field: ^0.0.7
   pin_code_fields: ^9.3.0
   timeago: ^3.7.1
+  cached_network_image: ^3.4.1
 
 dev_dependencies:
   flutter_test:

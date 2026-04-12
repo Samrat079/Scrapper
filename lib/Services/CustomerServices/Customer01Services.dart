@@ -17,22 +17,19 @@ class Customer01Services {
   Future<void> createUser(Customer01 user) async {
     return await _users
         .doc(user.uid)
-        .set(user.toJson(), SetOptions(merge: true))
-        .catchError((e) => print("Cant add user: $e"));
+        .set(user.toJson(), SetOptions(merge: true));
   }
 
   Future<void> testUser() async {
     return await _users
         .add({'hello': 'wporld'})
-        .then((value) => print('added$value'))
-        .catchError((e) => print('test failed: $e'));
+        .then((value) => print('added$value'));
   }
 
   Future<Customer01> getUserById(String uid) async {
     return await _users
         .doc(uid)
         .get()
-        .then((e) => Customer01.fromJson(e.data() as Map<String, dynamic>))
-        .catchError((e) => print('cant get doc:$e'));
+        .then((e) => Customer01.fromJson(e.data() as Map<String, dynamic>));
   }
 }

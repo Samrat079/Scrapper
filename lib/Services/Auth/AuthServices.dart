@@ -21,6 +21,7 @@ class AuthServices {
 
   /// Phone number signup, this returns a confirmation
   /// it needes to be confirmed by the otp
+  /// Without the compleater it would return before code send
   Future<void> sendOtp(String number) async {
     final Completer<void> completer = Completer();
 
@@ -81,4 +82,5 @@ class AuthServices {
   //   }
   //   return user;
   // }
+
 }
