@@ -1,14 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:scrapper/Models/Customer/Address/Address01.dart';
 import 'package:scrapper/Models/Customer/Customer01.dart';
 import 'package:scrapper/Services/AddressServices/Address01Services.dart';
-import 'package:scrapper/Services/CustomerServices/Customer01Services.dart';
 import 'package:scrapper/Widgets/Custome/CenterColumn/ScrollColumn01.dart';
-import 'package:scrapper/Widgets/Custome/FutureBuilder01/FutureBuilder01.dart';
-import 'package:scrapper/Widgets/Pages/AddressesScreen01/Widget/AddressTile01.dart';
-import 'package:scrapper/Widgets/Pages/AddressesScreen01/Widget/BottomSheet01.dart';
+import 'package:scrapper/Widgets/Custome/BottomSheet/BottomSheet01.dart';
+
+import 'Widget/AddressTile01.dart';
 
 class AddressesScreen01 extends StatelessWidget {
   final Customer01 customer;
@@ -36,7 +34,10 @@ class AddressesScreen01 extends StatelessWidget {
                 physics: NeverScrollableScrollPhysics(),
                 itemCount: docs.length,
                 itemBuilder: (context, index) {
-                  return AddressTile01(doc: docs[index], addService: addService);
+                  return AddressTile01(
+                    doc: docs[index],
+                    addService: addService,
+                  );
                 },
               ),
 
@@ -46,12 +47,13 @@ class AddressesScreen01 extends StatelessWidget {
                   backgroundColor: Theme.of(context).colorScheme.primary,
                   foregroundColor: Theme.of(context).colorScheme.onPrimary,
                 ),
-                onPressed: () => showModalBottomSheet(
+                onPressed: () => showModalBottomSheet<Address01>(
                   useSafeArea: true,
                   isScrollControlled: true,
                   context: context,
-                  builder: (context) => BottomSheet01(customer: customer),
-                ),
+                  builder: (context) => BottomSheet01(),
+                ).then((address) => addService.add(address!)),
+
                 label: Text('Add address'),
                 icon: Icon(Icons.add_outlined),
               ),

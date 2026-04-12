@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:scrapper/Widgets/Pages/LoginScreen01/AddNumber01.dart';
-import 'package:scrapper/Widgets/Pages/LoginScreen01/AddOtp01.dart';
+
+import 'AddNumber01.dart';
+import 'AddOtp01.dart';
 
 class LoginScreen01 extends StatelessWidget {
   const LoginScreen01({super.key});
@@ -14,7 +15,10 @@ class LoginScreen01 extends StatelessWidget {
         controller: _controller,
         physics: NeverScrollableScrollPhysics(),
         scrollDirection: Axis.vertical,
-        children: [AddNumber01(controller: _controller,), AddOtp01(controller: _controller,)],
+        children: [
+          AddNumber01(controller: _controller),
+          AddOtp01(controller: _controller),
+        ],
       ),
     );
   }

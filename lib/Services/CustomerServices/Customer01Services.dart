@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:scrapper/Models/Customer/Customer01.dart';
+import 'package:scrapper/Services/Auth/AuthServices.dart';
 
 class Customer01Services {
   static final Customer01Services _instance = Customer01Services._internal();
@@ -10,11 +11,21 @@ class Customer01Services {
     return _instance;
   }
 
+  Customer01? _customer;
+
   final CollectionReference _users = FirebaseFirestore.instance.collection(
     'customers',
   );
 
+  Future<void> init() async {
+    final doc = await _users.doc(AuthServices().currUser?.uid).get();
+    if (!doc.exists) return;
+    _customer = Customer01.fromJson(doc.data() as Map<String, dynamic>);
+    return;
+  }
+
   Future<void> createUser(Customer01 user) async {
+    _customer = user;
     return await _users
         .doc(user.uid)
         .set(user.toJson(), SetOptions(merge: true));
@@ -31,5 +42,10 @@ class Customer01Services {
         .doc(uid)
         .get()
         .then((e) => Customer01.fromJson(e.data() as Map<String, dynamic>));
+  }
+
+  Customer01 get currCustomer {
+    if (_customer == null) return throw Exception('No customer found');
+    return _customer!;
   }
 }

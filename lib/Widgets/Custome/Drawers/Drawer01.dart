@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:scrapper/Services/Auth/AuthServices.dart';
+import 'package:scrapper/Services/CustomerServices/Customer01Services.dart';
 
 class Drawer01 extends StatelessWidget {
   const Drawer01({super.key});
@@ -17,7 +18,7 @@ class Drawer01 extends StatelessWidget {
             onTap: () => Navigator.pushNamed(
               context,
               '/profile',
-              arguments: AuthServices().currUser?.uid,
+              arguments: Customer01Services().currCustomer,
             ),
           ),
           ListTile(
@@ -28,6 +29,11 @@ class Drawer01 extends StatelessWidget {
             leading: Icon(Icons.error_outline),
             title: Text('Error'),
             onTap: () => Navigator.pushNamed(context, '/error'),
+          ),
+          ListTile(
+            leading: Icon(Icons.home_outlined),
+            title: Text('Home02'),
+            onTap: () => Navigator.pushNamed(context, '/home02'),
           ),
           ListTile(
             iconColor: Theme.of(context).colorScheme.error,
