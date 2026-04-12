@@ -80,6 +80,11 @@ class ProfileScreen01 extends StatelessWidget {
                     title: Text('Saved address'),
                     leading: Icon(Icons.house_outlined),
                     trailing: Icon(Icons.arrow_forward_ios_outlined),
+                    onTap: () => Navigator.pushNamed(
+                      context,
+                      '/addresses',
+                      arguments: data,
+                    ),
                   ),
                 ],
               ),

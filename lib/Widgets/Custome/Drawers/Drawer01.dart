@@ -20,10 +20,10 @@ class Drawer01 extends StatelessWidget {
               arguments: AuthServices().currUser?.uid,
             ),
           ),
-          // ListTile(
-          //   title: Text('Login'),
-          //   onTap: () => Navigator.pushNamed(context, '/login'),
-          // ),
+          ListTile(
+            title: Text('Login'),
+            onTap: () => Navigator.pushNamed(context, '/login'),
+          ),
           ListTile(
             leading: Icon(Icons.error_outline),
             title: Text('Error'),
