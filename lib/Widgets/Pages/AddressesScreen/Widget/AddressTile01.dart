@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:scrapper/Services/AddressServices/Address01Services.dart';
 
-import '../../../../Models/Customer/Address/Address01.dart';
+import '../../../../Models/Address/Address01.dart';
 
 class AddressTile01 extends StatelessWidget {
   final QueryDocumentSnapshot doc;

@@ -1,11 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:scrapper/Models/Customer/Address/Address01.dart';
+import 'package:scrapper/Models/Address/Address02.dart';
 import 'package:scrapper/Models/Customer/Customer01.dart';
 import 'package:scrapper/Services/AddressServices/Address01Services.dart';
+import 'package:scrapper/Services/AddressServices/Address02Services.dart';
 import 'package:scrapper/Widgets/Custome/CenterColumn/ScrollColumn01.dart';
 import 'package:scrapper/Widgets/Custome/BottomSheet/BottomSheet01.dart';
+import 'package:scrapper/Widgets/Pages/AddressesScreen/Widget/AddressTile02.dart';
 
+import '../../../Models/Address/Address01.dart';
 import 'Widget/AddressTile01.dart';
 
 class AddressesScreen01 extends StatelessWidget {
@@ -15,11 +18,11 @@ class AddressesScreen01 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final addService = Address01Services(customer.uid);
+    final add2Service = Address02Services(customer.uid);
     return Scaffold(
       appBar: AppBar(),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: addService.getRealTime(),
+      body: StreamBuilder<QuerySnapshot<Address02>>(
+        stream: add2Service.getRealTime(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Center(child: CircularProgressIndicator());
@@ -34,9 +37,9 @@ class AddressesScreen01 extends StatelessWidget {
                 physics: NeverScrollableScrollPhysics(),
                 itemCount: docs.length,
                 itemBuilder: (context, index) {
-                  return AddressTile01(
+                  return AddressTile02(
                     doc: docs[index],
-                    addService: addService,
+                    addService: add2Service,
                   );
                 },
               ),
@@ -47,12 +50,15 @@ class AddressesScreen01 extends StatelessWidget {
                   backgroundColor: Theme.of(context).colorScheme.primary,
                   foregroundColor: Theme.of(context).colorScheme.onPrimary,
                 ),
-                onPressed: () => showModalBottomSheet<Address01>(
-                  useSafeArea: true,
-                  isScrollControlled: true,
-                  context: context,
-                  builder: (context) => BottomSheet01(),
-                ).then((address) => addService.add(address!)),
+                onPressed: () async {
+                  final result = await Navigator.pushNamed(
+                    context,
+                    '/location01',
+                  );
+                  if (result != null && result is Address02) {
+                    await add2Service.add(result);
+                  }
+                },
 
                 label: Text('Add address'),
                 icon: Icon(Icons.add_outlined),

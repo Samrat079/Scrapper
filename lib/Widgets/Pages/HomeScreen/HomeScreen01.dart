@@ -13,7 +13,14 @@ class HomeScreen01 extends StatelessWidget {
       body: CenterColumn01(
         children: [
           Text('Home test', textAlign: TextAlign.center),
-          Text('This is the second', textAlign: TextAlign.center),
+          Text('We will do it for you', textAlign: TextAlign.center),
+          ElevatedButton(
+            onPressed: () => Navigator.pushNamed(
+              context,
+              '/location01',
+            ).then((result) => print(result)),
+            child: Text('location01'),
+          ),
         ],
       ),
       drawer: Drawer01(),

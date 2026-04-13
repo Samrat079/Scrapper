@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:scrapper/Models/Customer/Address/Address01.dart';
 
 class Customer01 {
   final String uid, displayName, phoneNumber, email, photoUrl;

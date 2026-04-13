@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:scrapper/Models/Customer/Address/Address01.dart';
+
+import '../../Models/Address/Address01.dart';
 
 class Address01Services {
   final String uid;

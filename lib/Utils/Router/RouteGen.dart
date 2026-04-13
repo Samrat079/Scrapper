@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:scrapper/Models/Customer/Customer01.dart';
 import 'package:scrapper/Services/Auth/AuthServices.dart';
 import 'package:scrapper/Services/CustomerServices/Customer01Services.dart';
-import 'package:scrapper/Widgets/Pages/HomeScreen/HomeScreen02.dart';
+import 'package:scrapper/Widgets/Pages/LocationForm/LocationForm01.dart';
 
 import '../../Widgets/Pages/AddressesScreen/AddressesScreen01.dart';
 import '../../Widgets/Pages/ErrorScreen/ErrorScreen01.dart';
@@ -25,13 +25,13 @@ class RouteGen {
       // case '/':
       //   return router(HomeScreen01());
       case '/':
-        return router(HomeScreen02());
+        return router(HomeScreen01());
       case '/login':
         return router(LoginScreen01());
       case '/error':
         return router(ErrorScreen01());
-      case '/home02':
-        return router(HomeScreen02());
+      case '/location01':
+        return router(LocationForm01());
     }
 
     /// Protected route
