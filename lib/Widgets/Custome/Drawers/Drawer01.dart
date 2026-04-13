@@ -21,25 +21,25 @@ class Drawer01 extends StatelessWidget {
               arguments: Customer01Services().currCustomer,
             ),
           ),
-          ListTile(
-            title: Text('Login'),
-            onTap: () => Navigator.pushNamed(context, '/login'),
-          ),
-          ListTile(
-            leading: Icon(Icons.error_outline),
-            title: Text('Error'),
-            onTap: () => Navigator.pushNamed(context, '/error'),
-          ),
-          ListTile(
-            leading: Icon(Icons.home_outlined),
-            title: Text('Home02'),
-            onTap: () => Navigator.pushNamed(context, '/home02'),
-          ),
+          // ListTile(
+          //   title: Text('Login'),
+          //   onTap: () => Navigator.pushNamed(context, '/login'),
+          // ),
+          // ListTile(
+          //   leading: Icon(Icons.error_outline),
+          //   title: Text('Error'),
+          //   onTap: () => Navigator.pushNamed(context, '/error'),
+          // ),
+          // ListTile(
+          //   leading: Icon(Icons.home_outlined),
+          //   title: Text('Home02'),
+          //   onTap: () => Navigator.pushNamed(context, '/home02'),
+          // ),
           ListTile(
             iconColor: Theme.of(context).colorScheme.error,
             textColor: Theme.of(context).colorScheme.error,
             leading: Icon(Icons.logout_outlined),
-            title: Text('Login'),
+            title: Text('Logout'),
             onTap: () => AuthServices().logout(),
           ),
         ],

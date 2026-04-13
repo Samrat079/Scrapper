@@ -22,8 +22,10 @@ class RouteGen {
 
     /// Unguarded routes
     switch (name) {
+      // case '/':
+      //   return router(HomeScreen01());
       case '/':
-        return router(HomeScreen01());
+        return router(HomeScreen02());
       case '/login':
         return router(LoginScreen01());
       case '/error':
@@ -37,9 +39,7 @@ class RouteGen {
 
     switch (name) {
       case '/profile':
-        return router(
-          ProfileScreen01(customer: args as Customer01),
-        );
+        return router(ProfileScreen01(customer: args as Customer01));
       case '/addresses':
         return router(AddressesScreen01(customer: args as Customer01));
     }

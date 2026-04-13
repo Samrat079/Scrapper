@@ -38,6 +38,7 @@ dependencies:
   firebase_auth: ^6.3.0
   cloud_firestore: ^6.2.0
   flutter_form_builder: ^10.3.0+2
+  flutter_map_animations:
   form_builder_validators: ^11.3.0
   flutter_intl_phone_field: ^0.0.7
   pin_code_fields: ^9.3.0
@@ -47,6 +48,8 @@ dependencies:
   latlong2: ^0.9.1
   flutter_map_location_marker: ^10.2.0
   geolocator: ^14.0.2
+  nominatim_flutter: ^0.0.8
+  rxdart: ^0.28.0
 
 dev_dependencies:
   flutter_test:
