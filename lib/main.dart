@@ -4,6 +4,7 @@ import 'package:scrapper/Services/AppUserServices/AppUserServices01.dart';
 import 'package:scrapper/Services/CustomerServices/CustomerServices01.dart';
 import 'package:scrapper/Utils/Router/RouteGen.dart';
 import 'package:scrapper/firebase_options.dart';
+import 'package:scrapper/theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,16 +21,22 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       initialRoute: '/',
       onGenerateRoute: RouteGen.generateRoute,
-      theme: ThemeData(
-        brightness: Brightness.light,
-        // colorSchemeSeed: const Color.fromRGBO(20, 242, 0, 1),
-        colorSchemeSeed: Colors.green,
-      ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        // colorSchemeSeed: const Color.fromRGBO(20, 242, 0, 1),
-        colorSchemeSeed: Colors.green,
-      ),
+      // theme: ThemeData(
+      //   colorScheme: ColorScheme.fromSeed(
+      //     seedColor: Color.fromRGBO(20, 242, 0, 1),
+      //     brightness: Brightness.light,
+      //     dynamicSchemeVariant: DynamicSchemeVariant.fidelity,
+      //   ),
+      // ),
+      // darkTheme: ThemeData(
+      //   colorScheme: ColorScheme.fromSeed(
+      //     seedColor: Color.fromRGBO(20, 242, 0, 1),
+      //     brightness: Brightness.dark,
+      //     dynamicSchemeVariant: DynamicSchemeVariant.fidelity,
+      //   ),
+      // ),
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system,
     );
   }

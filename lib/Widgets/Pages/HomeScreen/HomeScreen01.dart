@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scrapper/Models/Address/Address02.dart';
 import 'package:scrapper/Widgets/Custome/Drawers/Drawer01.dart';
+import 'package:scrapper/theme/theme_extensions.dart';
 
 import '../../Custome/CenterColumn/CenterColumn01.dart';
 
@@ -52,8 +53,10 @@ class HomeScreen01 extends StatelessWidget {
 
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              foregroundColor: Theme.of(context).colorScheme.onPrimary,
+              // backgroundColor: Theme.of(context).colorScheme.primary,
+              // foregroundColor: Theme.of(context).colorScheme.onPrimary,
+              backgroundColor: context.colorScheme.primary,
+              foregroundColor: context.colorScheme.onPrimary
             ),
             onPressed: () => Navigator.pushNamed<Address02>(
               context,
