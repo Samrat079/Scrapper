@@ -22,11 +22,13 @@ class MyApp extends StatelessWidget {
       onGenerateRoute: RouteGen.generateRoute,
       theme: ThemeData(
         brightness: Brightness.light,
-        colorSchemeSeed: const Color.fromRGBO(20, 242, 0, 1),
+        // colorSchemeSeed: const Color.fromRGBO(20, 242, 0, 1),
+        colorSchemeSeed: Colors.green,
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
-        colorSchemeSeed: const Color.fromRGBO(20, 242, 0, 1),
+        // colorSchemeSeed: const Color.fromRGBO(20, 242, 0, 1),
+        colorSchemeSeed: Colors.green,
       ),
       themeMode: ThemeMode.system,
     );

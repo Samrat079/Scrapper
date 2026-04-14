@@ -26,19 +26,6 @@ class _AddNumber01State extends State<AddNumber01> {
     if (_addNumberKey.currentState?.saveAndValidate() ?? false) {
       final number = _addNumberKey.currentState?.fields['Phone']?.value;
 
-      // AuthServices()
-      //     .sendOtp(number)
-      //     .then(
-      //       (_) => widget._controller.nextPage(
-      //         duration: Duration(seconds: 1),
-      //         curve: Curves.easeInOut,
-      //       ),
-      //     )
-      //     .onError<FirebaseAuthException>(
-      //       (e, stackTrace) => _addNumberKey.currentState?.fields['Phone']
-      //           ?.invalidate(e.message.toString()),
-      //     );
-
       AppUserServices01()
           .sendOtp(number)
           .then(
@@ -72,7 +59,6 @@ class _AddNumber01State extends State<AddNumber01> {
 
           FormBuilderField(
             name: 'Phone',
-            validator: FormBuilderValidators.phoneNumber(),
             builder: (field) {
               return IntlPhoneField(
                 onChanged: (phone) => field.didChange(phone.completeNumber),

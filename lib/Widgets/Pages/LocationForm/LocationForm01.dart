@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_intl_phone_field/flutter_intl_phone_field.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:nominatim_flutter/model/response/nominatim_response.dart';
 import 'package:scrapper/Models/Address/Address02.dart';
+import 'package:scrapper/Services/AppUserServices/AppUserServices01.dart';
 import 'package:scrapper/Widgets/Custome/Drawers/Drawer01.dart';
 import 'package:scrapper/Widgets/Custome/SearchDelegate/encodingDelegate01.dart';
 
@@ -39,6 +41,7 @@ class _LocationForm01State extends State<LocationForm01>
     if (lat == null || lon == null) return;
     final newLocation = LatLng(lat, lon);
     _animatedMapController.animateTo(dest: newLocation, zoom: 18);
+    _formKey.currentState?.fields['place']?.didChange(res.displayName);
     setState(() {
       _selectedLocation = newLocation;
       _selectedPlace = res;
@@ -119,19 +122,10 @@ class _LocationForm01State extends State<LocationForm01>
                 readOnly: true,
                 validator: FormBuilderValidators.required(),
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                onTap: () =>
-                    showSearch<NominatimResponse?>(
-                      context: context,
-                      delegate: EncodingDelegate01(),
-                    ).then((place) {
-                      if (place == null) return;
-
-                      _updatePlace(place);
-
-                      _formKey.currentState?.fields['place']?.didChange(
-                        place.displayName,
-                      );
-                    }),
+                onTap: () => showSearch<NominatimResponse?>(
+                  context: context,
+                  delegate: EncodingDelegate01(),
+                ).then((place) => _updatePlace(place)),
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.location_pin),
                   suffixIcon: const Icon(Icons.edit_outlined),
@@ -157,21 +151,24 @@ class _LocationForm01State extends State<LocationForm01>
               ),
 
               /// Contact number
-              FormBuilderTextField(
+              FormBuilderField(
                 name: 'phoneNumber',
-                validator: FormBuilderValidators.phoneNumber(),
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                maxLength: 10,
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.phone_outlined),
-                  labelText: 'Contact number',
-                  helperText:
-                      'The sanitation worker will use this to contact you',
-                  helperStyle: TextStyle(fontStyle: FontStyle.italic),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                ),
+                initialValue: AppUserServices01().current.auth?.phoneNumber,
+                builder: (field) {
+                  return IntlPhoneField(
+                    initialValue: field.value,
+                    onChanged: (phone) => field.didChange(phone.completeNumber),
+                    initialCountryCode: 'IN',
+                    decoration: InputDecoration(
+                      labelText: 'Contact number',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      helperText:
+                          'The sanitation worker will use this to contact you',
+                    ),
+                  );
+                },
               ),
 
               /// submit button
