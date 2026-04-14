@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:scrapper/Models/Customer/Customer01.dart';
-import 'package:scrapper/Services/Auth/AuthServices.dart';
-import 'package:scrapper/Services/CustomerServices/Customer01Services.dart';
+import 'package:scrapper/Services/AppUserServices/AppUserServices01.dart';
+import 'package:scrapper/Services/CustomerServices/CustomerServices01.dart';
 import 'package:scrapper/Widgets/Custome/CardList01/CardList01.dart';
 import 'package:scrapper/Widgets/Custome/CenterColumn/ScrollColumn01.dart';
 import 'package:scrapper/Widgets/Custome/FutureBuilder01/FutureBuilder01.dart';
@@ -96,16 +96,16 @@ class ProfileScreen01 extends StatelessWidget {
                 iconColor: Theme.of(context).colorScheme.error,
                 leading: Icon(Icons.logout_outlined),
                 title: Text('Logout'),
-                onTap: () {
-                  AuthServices().logout().then((_) => Navigator.pop(context));
-                },
+                onTap: () => AppUserServices01().logout().then(
+                  (_) => Navigator.pop(context),
+                ),
               ),
               ListTile(
                 textColor: Theme.of(context).colorScheme.error,
                 iconColor: Theme.of(context).colorScheme.error,
                 leading: Icon(Icons.delete_outline),
                 title: Text('Delete profile'),
-                onTap: () => AuthServices().currUser?.delete(),
+                onTap: () => AppUserServices01().delete(),
               ),
             ],
           ),

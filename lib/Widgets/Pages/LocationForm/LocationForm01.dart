@@ -117,6 +117,8 @@ class _LocationForm01State extends State<LocationForm01>
               FormBuilderTextField(
                 name: 'place',
                 readOnly: true,
+                validator: FormBuilderValidators.required(),
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 onTap: () =>
                     showSearch<NominatimResponse?>(
                       context: context,
@@ -143,6 +145,8 @@ class _LocationForm01State extends State<LocationForm01>
               /// house floor
               FormBuilderTextField(
                 name: 'houseNo',
+                validator: FormBuilderValidators.required(),
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.house_outlined),
                   labelText: 'House no., Flat, Floor',
@@ -156,6 +160,8 @@ class _LocationForm01State extends State<LocationForm01>
               FormBuilderTextField(
                 name: 'phoneNumber',
                 validator: FormBuilderValidators.phoneNumber(),
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                maxLength: 10,
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.phone_outlined),
                   labelText: 'Contact number',

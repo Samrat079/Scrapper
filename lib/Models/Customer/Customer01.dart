@@ -4,9 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 class Customer01 {
   final String uid, displayName, phoneNumber, email, photoUrl;
   final Timestamp createdAt;
-  // final List<Address01> addresses;
-
-  // final User auth;
 
   Customer01({
     required this.uid,
@@ -15,9 +12,24 @@ class Customer01 {
     required this.email,
     required this.createdAt,
     required this.photoUrl,
-    // required this.addresses,
-    // required this.auth,
   });
+
+  factory Customer01.fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    final data = snapshot.data()!;
+    return Customer01(
+      uid: snapshot.id,
+      displayName: data['displayName'] ?? 'anonymous',
+      phoneNumber: data['phoneNumber'] ?? 'Number not added',
+      email: data['email'] ?? 'Email not verified',
+      createdAt: data['createdAt'] ?? Timestamp.now(),
+      photoUrl:
+          data['photoUrl'] ??
+          'https://placehold.co/256x256/darkgreen/white.png?text=test',
+    );
+  }
 
   factory Customer01.fromJson(Map<String, dynamic> json) {
     return Customer01(
@@ -29,12 +41,21 @@ class Customer01 {
       photoUrl:
           json['photoUrl'] ??
           'https://placehold.co/256x256/darkgreen/white.png?text=test',
-      // auth: json as User,
-      // addresses:
-      //     (json['addresses'] as List?)
-      //         ?.map((i) => Address01.fromJson(i))
-      //         .toList() ??
-      //     [],
+    );
+  }
+
+  factory Customer01.fromAuth(User user) {
+    return Customer01(
+      uid: user.uid,
+      displayName: user.displayName ?? 'anonymous',
+      phoneNumber: user.phoneNumber ?? 'Phone number not verified',
+      email: user.email ?? 'Email not verified',
+      photoUrl:
+          user.photoURL ??
+          'https://placehold.co/256x256/darkgreen/white.png?text=test',
+      createdAt: user.metadata.creationTime != null
+          ? Timestamp.fromDate(user.metadata.creationTime!)
+          : Timestamp.now(),
     );
   }
 
@@ -46,8 +67,6 @@ class Customer01 {
       'email': email,
       'createdAt': createdAt,
       'photoUrl': photoUrl,
-      // 'auth': auth,
-      // 'addresses': addresses,
     };
   }
 }

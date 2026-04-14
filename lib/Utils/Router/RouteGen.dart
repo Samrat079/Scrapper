@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:scrapper/Models/AppUser/AppUser01.dart';
 import 'package:scrapper/Models/Customer/Customer01.dart';
-import 'package:scrapper/Services/Auth/AuthServices.dart';
-import 'package:scrapper/Services/CustomerServices/Customer01Services.dart';
+import 'package:scrapper/Services/AppUserServices/AppUserServices01.dart';
+import 'package:scrapper/Services/CustomerServices/CustomerServices01.dart';
 import 'package:scrapper/Widgets/Pages/LocationForm/LocationForm01.dart';
 
 import '../../Widgets/Pages/AddressesScreen/AddressesScreen01.dart';
@@ -14,7 +15,7 @@ class RouteGen {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
     final name = settings.name;
-    final isLoggedIn = AuthServices().currUser != null;
+    final isLoggedIn = AppUserServices01().isLoggedIn;
 
     /// reduces boiler plate
     Route<dynamic> router(Widget page) =>

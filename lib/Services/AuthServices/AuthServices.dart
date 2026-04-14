@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:scrapper/Models/Customer/Customer01.dart';
-import 'package:scrapper/Services/CustomerServices/Customer01Services.dart';
+import 'package:scrapper/Services/CustomerServices/CustomerServices01.dart';
 
 class AuthServices {
   static final AuthServices _instance = AuthServices._internal();
@@ -73,14 +73,5 @@ class AuthServices {
 
   /// This returns a optional user
   User? get currUser => _auth.currentUser;
-
-  /// This returns a confirm user but will throw if not logged in
-  // User get user {
-  //   final user = _auth.currentUser;
-  //   if (user == null) {
-  //     throw Exception("User not logged in");
-  //   }
-  //   return user;
-  // }
 
 }

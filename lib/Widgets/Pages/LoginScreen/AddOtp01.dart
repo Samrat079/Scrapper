@@ -1,11 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:scrapper/Services/Auth/AuthServices.dart';
+import 'package:scrapper/Services/AppUserServices/AppUserServices01.dart';
 
 import '../../Custome/CenterColumn/CenterColumn01.dart';
 
@@ -27,14 +25,13 @@ class _AddOtp01State extends State<AddOtp01> {
   void submitHandler() async {
     if (_otpController.currentState?.saveAndValidate() ?? false) {
       final otp = _otpController.currentState?.fields['Otp']?.value;
-
-      AuthServices()
+      AppUserServices01()
           .verifyOtp(otp)
           .then(
             (e) => Navigator.pushReplacementNamed(
               context,
               '/profile',
-              arguments: e?.uid,
+              arguments: e.customer01,
             ),
           )
           .onError<FirebaseAuthException>(
