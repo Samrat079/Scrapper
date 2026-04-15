@@ -43,11 +43,7 @@ class AppUserServices01 {
       StreamController<AppUser01>.broadcast();
 
   Stream<AppUser01> get stream => _controller.stream;
-
-  /// =========================
-  /// INIT (SYNC AUTH + PROFILE)
-  /// =========================
-
+  /// init
   Future<void> init() async {
     _auth.authStateChanges().listen((user) async {
       _authUser = user;
@@ -70,10 +66,7 @@ class AppUserServices01 {
     });
   }
 
-  /// =========================
-  /// OTP LOGIN
-  /// =========================
-
+  /// send otp
   Future<void> sendOtp(String number) async {
     final Completer<void> completer = Completer();
 
@@ -98,10 +91,7 @@ class AppUserServices01 {
     return completer.future;
   }
 
-  /// =========================
-  /// VERIFY OTP + CREATE/FETCH USER
-  /// =========================
-
+  /// Verfiy otp
   Future<AppUser01> verifyOtp(String otp) async {
     final credential = PhoneAuthProvider.credential(
       verificationId: _verificationId!,
