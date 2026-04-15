@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:scrapper/Models/Customer/Customer01.dart';
 import 'package:scrapper/Services/AppUserServices/AppUserServices01.dart';
-import 'package:scrapper/Services/CustomerServices/CustomerServices01.dart';
 import 'package:scrapper/Widgets/Custome/CardList01/CardList01.dart';
 import 'package:scrapper/Widgets/Custome/CenterColumn/ScrollColumn01.dart';
 import 'package:scrapper/Widgets/Custome/FutureBuilder01/FutureBuilder01.dart';
