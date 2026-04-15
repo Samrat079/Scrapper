@@ -52,12 +52,6 @@ class HomeScreen01 extends StatelessWidget {
           SizedBox(height: 16),
 
           ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              // backgroundColor: Theme.of(context).colorScheme.primary,
-              // foregroundColor: Theme.of(context).colorScheme.onPrimary,
-              backgroundColor: context.colorScheme.primary,
-              foregroundColor: context.colorScheme.onPrimary
-            ),
             onPressed: () => Navigator.pushNamed<Address02>(
               context,
               '/location01',

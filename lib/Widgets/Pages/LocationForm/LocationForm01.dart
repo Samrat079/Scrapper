@@ -130,9 +130,9 @@ class _LocationForm01State extends State<LocationForm01>
                   prefixIcon: const Icon(Icons.location_pin),
                   suffixIcon: const Icon(Icons.edit_outlined),
                   labelText: 'Area/Locality',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
+                  // border: OutlineInputBorder(
+                  //   borderRadius: BorderRadius.circular(16),
+                  // ),
                 ),
               ),
 
@@ -144,9 +144,9 @@ class _LocationForm01State extends State<LocationForm01>
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.house_outlined),
                   labelText: 'House no., Flat, Floor',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
+                  // border: OutlineInputBorder(
+                  //   borderRadius: BorderRadius.circular(16),
+                  // ),
                 ),
               ),
 
@@ -161,9 +161,9 @@ class _LocationForm01State extends State<LocationForm01>
                     initialCountryCode: 'IN',
                     decoration: InputDecoration(
                       labelText: 'Contact number',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
+                      // border: OutlineInputBorder(
+                      //   borderRadius: BorderRadius.circular(16),
+                      // ),
                       helperText:
                           'The sanitation worker will use this to contact you',
                     ),
@@ -174,10 +174,6 @@ class _LocationForm01State extends State<LocationForm01>
               /// submit button
               ElevatedButton(
                 onPressed: submitHandler,
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                ),
                 child: const Text('Submit'),
               ),
             ],
