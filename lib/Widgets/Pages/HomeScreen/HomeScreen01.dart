@@ -11,6 +11,14 @@ class HomeScreen01 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    void placeOrder() async {
+      final address = await Navigator.pushNamed(context, '/location01');
+      if (address == null || address is! Address02) return;
+      Order01Service().placeOrder(23, address);
+      Navigator.pushNamed(context, '/CurrOrder');
+    }
+
     return Scaffold(
       appBar: AppBar(),
       body: CenterColumn01(
@@ -52,17 +60,7 @@ class HomeScreen01 extends StatelessWidget {
 
           context.gapMD,
 
-          ElevatedButton(
-            onPressed: () =>
-                Navigator.pushNamed<Address02>(context, '/location01').then((
-                  address,
-                ) {
-                  if (address == null) return;
-                  Order01Service().placeOrder(23, address);
-                  Navigator.pushNamed(context, '/CurrOrder');
-                }),
-            child: Text('Book now'),
-          ),
+          ElevatedButton(onPressed: placeOrder, child: Text('Book now')),
         ],
       ),
       drawer: Drawer01(),

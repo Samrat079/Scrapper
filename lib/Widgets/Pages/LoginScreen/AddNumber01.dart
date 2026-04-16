@@ -55,7 +55,7 @@ class _AddNumber01State extends State<AddNumber01> {
       child: CenterColumn01(
         children: [
           Image.asset('assets/Illustrations/login02.png', height: 256),
-          SizedBox(height: 16),
+          context.gapMD,
           Text(
             'Verify Phone number',
             textAlign: TextAlign.center,
@@ -86,7 +86,7 @@ class _AddNumber01State extends State<AddNumber01> {
             onPressed: isLoading ? null : submitHandler,
             child: Text('Submit'),
           ),
-          context.gapSM,
+          context.gapMD,
           ElevatedButton(
             onPressed: clear,
             style: ElevatedButton.styleFrom(

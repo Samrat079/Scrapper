@@ -14,7 +14,7 @@ class CurrOrderScreen01 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<Order01?>(
-      valueListenable: Order01Service().runningOrder,
+      valueListenable: Order01Service(),
       builder: (context, order, _) {
         if (order == null) {
           return Scaffold(body: Center(child: Text('Thre is not data')));

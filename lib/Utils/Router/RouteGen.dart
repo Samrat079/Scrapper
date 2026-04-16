@@ -32,20 +32,18 @@ class RouteGen {
         return router(LoginScreen01());
       case '/error':
         return router(ErrorScreen01());
-      case '/location01':
-        return router<Address02>(LocationForm01());
     }
 
     /// Protected route
     if (!isLoggedIn) return router(LoginScreen01());
 
     switch (name) {
-      // case '/location01':
-      //   return MaterialPageRoute(builder: (_) => LocationForm01());
+      case '/location01':
+        return router(LocationForm01());
       case '/CurrOrder':
         return router(CurrOrderScreen01());
       case '/profile':
-        return router(ProfileScreen01(customer: args as Customer01));
+        return router(ProfileScreen01());
       case '/addresses':
         return router(AddressesScreen01(customer: args as Customer01));
       case '/orders01':

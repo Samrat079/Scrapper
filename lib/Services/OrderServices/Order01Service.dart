@@ -6,15 +6,13 @@ import 'package:scrapper/Models/Address/Address02.dart';
 import 'package:scrapper/Models/Orders/Order01.dart';
 import 'package:scrapper/Services/AppUserServices/AppUserServices01.dart';
 
-class Order01Service {
-  /// 🔒 Singleton
+class Order01Service extends ValueNotifier<Order01?> {
+  /// Singleton
   static final Order01Service _instance = Order01Service._internal();
 
-  Order01Service._internal();
+  Order01Service._internal() : super(null);
 
   factory Order01Service() => _instance;
-
-  final ValueNotifier<Order01?> runningOrder = ValueNotifier(null);
 
   StreamSubscription<QuerySnapshot<Order01>>? _orderSub;
 
@@ -41,21 +39,24 @@ class Order01Service {
         .snapshots()
         .listen((snapshot) {
           if (snapshot.docs.isEmpty) {
-            runningOrder.value = null;
+            value = null;
           } else {
-            runningOrder.value = snapshot.docs.first.data();
+            value = snapshot.docs.first.data();
           }
         });
   }
 
+  /// dispose
+  @override
   void dispose() {
     _orderSub?.cancel();
-    runningOrder.value = null;
+    super.dispose();
   }
 
   Future<void> placeOrder(double price, Address02 address) async {
     final customer = AppUserServices01().current.customer01!;
     final doc = _ref.doc();
+
     final order = Order01(
       uid: doc.id,
       price: price,
@@ -63,39 +64,24 @@ class Order01Service {
       customer: customer,
       createdAt: Timestamp.now(),
     );
+
     await doc.set(order);
-    runningOrder.value = order;
+    value = order;
   }
 
-  /// Canceled curr order then updated listeners
   Future<void> cancelCurrOrder() async {
-    final id = runningOrder.value?.uid;
-    if (id == null) return;
-
+    final id = value?.uid;
     await _ref.doc(id).update({'status': Order01Status.cancelled.name});
-
-    runningOrder.value = null;
+    value = null;
   }
 
-  /// 🔄 Update status
   Future<void> statusById(String id, Order01Status status) {
     return _ref.doc(id).update({'status': status.name});
   }
 
+  /// Extra streams if needed
   Stream<QuerySnapshot<Order01>> getAllOrders() => _ref.snapshots();
 
   Stream<QuerySnapshot<Order01>> getAllByStatus(Order01Status status) =>
       _ref.where('status', isEqualTo: status.name).snapshots();
-
-  Stream<QuerySnapshot<Order01>> myOrder() {
-    final uid = AppUserServices01().current.uid;
-
-    return _ref
-        .where('customer.uid', isEqualTo: uid)
-        .where(
-          'status',
-          whereIn: [Order01Status.requested.name, Order01Status.assigned.name],
-        )
-        .snapshots();
-  }
 }

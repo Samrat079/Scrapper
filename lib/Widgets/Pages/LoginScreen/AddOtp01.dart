@@ -60,7 +60,7 @@ class _AddOtp01State extends State<AddOtp01> {
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
 
-          SizedBox(height: 20),
+          context.gapXL,
 
           FormBuilderField(
             name: 'Otp',
@@ -94,7 +94,7 @@ class _AddOtp01State extends State<AddOtp01> {
             onPressed: isLoading ? null : submitHandler,
             child: Text('Submit'),
           ),
-          context.gapSM,
+          context.gapMD,
           ElevatedButton(
             onPressed: clear,
             style: ElevatedButton.styleFrom(

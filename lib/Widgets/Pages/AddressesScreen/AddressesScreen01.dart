@@ -14,6 +14,11 @@ class AddressesScreen01 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final add2Service = Address02Services(customer.uid);
+    void addAddress()async{
+      final address = await Navigator.pushNamed(context, '/location01');
+      if (address == null || address is! Address02) return;
+      add2Service.add(address);
+    }
     return Scaffold(
       appBar: AppBar(),
       body: StreamBuilder<QuerySnapshot<Address02>>(
@@ -45,10 +50,7 @@ class AddressesScreen01 extends StatelessWidget {
                   backgroundColor: Theme.of(context).colorScheme.primary,
                   foregroundColor: Theme.of(context).colorScheme.onPrimary,
                 ),
-                onPressed: () =>
-                    Navigator.pushNamed<Address02>(context, '/location01').then(
-                      (result) => {if (result != null) add2Service.add(result)},
-                    ),
+                onPressed: addAddress,
                 label: Text('Add address'),
                 icon: Icon(Icons.add_outlined),
               ),
