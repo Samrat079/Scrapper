@@ -1,5 +1,8 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:scrapper/Models/Address/Address02.dart';
+import 'package:scrapper/Services/OrderServices/Order01Service.dart';
 import 'package:scrapper/Widgets/Custome/Drawers/Drawer01.dart';
 import 'package:scrapper/theme/theme_extensions.dart';
 
@@ -52,10 +55,13 @@ class HomeScreen01 extends StatelessWidget {
           SizedBox(height: 16),
 
           ElevatedButton(
-            onPressed: () => Navigator.pushNamed<Address02>(
-              context,
-              '/location01',
-            ).then((result) => print(result)),
+            onPressed: () =>
+                Navigator.pushNamed<Address02>(context, '/location01').then((
+                  address,
+                ) {
+                  if (address == null) return;
+                  Order01Service().placeOrder(23, address);
+                }),
             child: Text('Book now'),
           ),
         ],

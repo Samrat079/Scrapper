@@ -25,9 +25,6 @@ class AppUserServices01 {
   User? _authUser;
   Customer01? _customer;
 
-  /// =========================
-  /// APP USER (SINGLE SOURCE)
-  /// =========================
 
   AppUser01 get current => AppUser01(auth: _authUser, customer01: _customer);
 
@@ -35,14 +32,14 @@ class AppUserServices01 {
 
   bool get isReady => current.exists;
 
-  /// =========================
-  /// STREAM (REACTIVE UI)
-  /// =========================
 
+  /// AppUser stream
   final StreamController<AppUser01> _controller =
       StreamController<AppUser01>.broadcast();
 
   Stream<AppUser01> get stream => _controller.stream;
+
+
   /// init
   Future<void> init() async {
     _auth.authStateChanges().listen((user) async {
@@ -91,7 +88,7 @@ class AppUserServices01 {
     return completer.future;
   }
 
-  /// Verfiy otp
+  /// Verify otp
   Future<AppUser01> verifyOtp(String otp) async {
     final credential = PhoneAuthProvider.credential(
       verificationId: _verificationId!,
@@ -121,19 +118,13 @@ class AppUserServices01 {
     return appUser;
   }
 
-  /// =========================
-  /// GET OTHER USERS
-  /// =========================
 
   Future<Customer01> getUserById(String uid) async {
     final doc = await _users.doc(uid).get();
     return doc.data()!;
   }
 
-  /// =========================
-  /// LOGOUT
-  /// =========================
-
+  /// logout current user
   Future<void> logout() async {
     await _auth.signOut();
     _authUser = null;
@@ -142,9 +133,7 @@ class AppUserServices01 {
     _controller.add(current);
   }
 
-  /// ==================
-  /// Delete profile
-  /// ===============
+  /// Delete user, also deletes the auth of that user
   Future<void> delete() async {
     _users.doc(_authUser?.uid).delete();
     _authUser?.delete();
