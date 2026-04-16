@@ -15,8 +15,6 @@ class Address02 {
     required this.phoneNumber,
   });
 
-
-
   factory Address02.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
     SnapshotOptions? options,
@@ -31,7 +29,7 @@ class Address02 {
   }
 
   factory Address02.fromJson(Map<String, dynamic> json) => Address02(
-    place: json['place'] as NominatimResponse,
+    place: NominatimResponse.fromJson(json['place']),
     houseNo: json['houseNo'],
     phoneNumber: json['phoneNumber'],
   );

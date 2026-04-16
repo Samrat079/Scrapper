@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:scrapper/Models/Address/Address02.dart';
 import 'package:scrapper/Services/OrderServices/Order01Service.dart';
@@ -19,7 +17,7 @@ class HomeScreen01 extends StatelessWidget {
         children: [
           Image.asset('assets/Illustrations/home_01.png', height: 300),
 
-          SizedBox(height: 16),
+          context.gapMD,
           RichText(
             textAlign: TextAlign.center,
             text: TextSpan(
@@ -29,7 +27,7 @@ class HomeScreen01 extends StatelessWidget {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 30,
-                    color: Theme.of(context).colorScheme.onSurface,
+                    color: context.colorScheme.onSurface,
                   ),
                 ),
                 TextSpan(
@@ -37,7 +35,7 @@ class HomeScreen01 extends StatelessWidget {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 30,
-                    color: Theme.of(context).colorScheme.primary,
+                    color: context.colorScheme.primary,
                   ),
                 ),
                 TextSpan(
@@ -45,14 +43,14 @@ class HomeScreen01 extends StatelessWidget {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 30,
-                    color: Theme.of(context).colorScheme.onSurface,
+                    color: context.colorScheme.onSurface,
                   ),
                 ),
               ],
             ),
           ),
 
-          SizedBox(height: 16),
+          context.gapMD,
 
           ElevatedButton(
             onPressed: () =>
@@ -61,6 +59,7 @@ class HomeScreen01 extends StatelessWidget {
                 ) {
                   if (address == null) return;
                   Order01Service().placeOrder(23, address);
+                  Navigator.pushNamed(context, '/CurrOrder');
                 }),
             child: Text('Book now'),
           ),

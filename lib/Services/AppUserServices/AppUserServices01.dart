@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:scrapper/Models/Customer/Customer01.dart';
 import 'package:scrapper/Models/AppUser/AppUser01.dart';
+import 'package:scrapper/Services/OrderServices/Order01Service.dart';
 
 class AppUserServices01 {
   static final AppUserServices01 _instance = AppUserServices01._internal();
@@ -131,6 +132,7 @@ class AppUserServices01 {
     _customer = null;
 
     _controller.add(current);
+    Order01Service().dispose();
   }
 
   /// Delete user, also deletes the auth of that user

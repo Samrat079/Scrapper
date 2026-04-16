@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:scrapper/Services/AppUserServices/AppUserServices01.dart';
+import 'package:scrapper/Services/OrderServices/Order01Service.dart';
 import 'package:scrapper/Utils/Router/RouteGen.dart';
 import 'package:scrapper/firebase_options.dart';
 import 'package:scrapper/theme/app_theme.dart';
@@ -8,8 +9,13 @@ import 'package:scrapper/theme/app_theme.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await AppUserServices01().init();
+  init();
   runApp(const MyApp());
+}
+
+void init() async {
+  await AppUserServices01().init();
+  Order01Service().init();
 }
 
 class MyApp extends StatelessWidget {

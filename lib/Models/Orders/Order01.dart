@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:scrapper/Models/Address/Address02.dart';
@@ -32,7 +31,9 @@ class Order01 {
     price: snapshot.data()!['price'],
     address: Address02.fromJson(snapshot.data()!['address']),
     customer: Customer01.fromJson(snapshot.data()!['customer']),
-    status: snapshot.data()!['status'],
+    status: Order01Status.values.firstWhere(
+      (e) => e.name == snapshot.data()!['status'],
+    ),
     sanitarian: snapshot.data()!['sanitarian'],
     createdAt: snapshot.data()!['createdAt'],
   );
@@ -43,7 +44,7 @@ class Order01 {
     'customer': customer.toJson(),
     'createdAt': createdAt,
     'status': status.name,
-    'sanitarian': sanitarian?.toJson()
+    'sanitarian': sanitarian?.toJson(),
   };
 }
 
