@@ -15,7 +15,6 @@ void main() async {
 
 void init() async {
   await AppUserServices01().init();
-  // Order01Service().init();
 }
 
 class MyApp extends StatelessWidget {

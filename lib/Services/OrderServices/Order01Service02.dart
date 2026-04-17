@@ -4,15 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:scrapper/Models/Orders/Order01.dart';
 
-import '../AppUserServices/AppUserServices01.dart';
-
 class Order01Service02 extends ValueNotifier<List<Order01>> {
   /// Singleton
-  static final Order01Service02 _instance = Order01Service02._internal();
-
-  Order01Service02._internal() : super([]);
-
-  factory Order01Service02() => _instance;
+  Order01Service02() : super([]);
 
   StreamSubscription<QuerySnapshot<Order01>>? _orderSub;
 

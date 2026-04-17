@@ -17,7 +17,10 @@ class CurrOrderScreen01 extends StatelessWidget {
       valueListenable: Order01Service(),
       builder: (context, order, _) {
         if (order == null) {
-          return Scaffold(body: Center(child: Text('Thre is not data')));
+          return Scaffold(
+            appBar: AppBar(),
+            body: Center(child: Text('Thre is not data')),
+          );
         }
 
         final coordinates = LatLng(

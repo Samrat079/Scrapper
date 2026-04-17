@@ -8,11 +8,7 @@ import 'package:scrapper/Services/AppUserServices/AppUserServices01.dart';
 
 class Order01Service extends ValueNotifier<Order01?> {
   /// Singleton
-  static final Order01Service _instance = Order01Service._internal();
-
-  Order01Service._internal() : super(null);
-
-  factory Order01Service() => _instance;
+  Order01Service() : super(null);
 
   StreamSubscription<QuerySnapshot<Order01>>? _orderSub;
 
