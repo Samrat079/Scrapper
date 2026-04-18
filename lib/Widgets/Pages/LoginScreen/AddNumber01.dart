@@ -75,18 +75,8 @@ class _AddNumber01State extends State<AddNumber01> {
                   hintText: '888-444-6464',
                   errorText: field.errorText,
                   errorMaxLines: 2,
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: context.radiusMD,
-                    borderSide: BorderSide(color: context.colorScheme.outline),
-                  ),
-
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: context.radiusMD,
-                    borderSide: BorderSide(
-                      color: context.colorScheme.primary,
-                      width: 2,
-                    ),
-                  ),
+                  filled: true,
+                  fillColor: context.colorScheme.surfaceContainer,
                 ),
               );
             },

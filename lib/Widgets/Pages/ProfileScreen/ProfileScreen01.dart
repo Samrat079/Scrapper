@@ -24,39 +24,42 @@ class ProfileScreen01 extends StatelessWidget {
           }
 
           return CenterColumn04(
+            padding: context.paddingSM,
             children: [
               context.gapMD,
 
               /// User profile section
-              Row(
-                children: [
-                  CachedNetworkImage(
-                    imageUrl: customer.photoUrl,
-                    imageBuilder: (context, imageProvider) => CircleAvatar(
-                      radius: 54,
-                      backgroundImage: imageProvider,
+              Padding(
+                padding: context.paddingSM,
+                child: Row(
+                  children: [
+                    CachedNetworkImage(
+                      imageUrl: customer.photoUrl,
+                      imageBuilder: (context, imageProvider) => CircleAvatar(
+                        radius: 36,
+                        backgroundImage: imageProvider,
+                      ),
+                      placeholder: (context, url) => const CircleAvatar(
+                        radius: 36,
+                        child: Icon(Icons.person_outline),
+                      ),
                     ),
-                    placeholder: (context, url) => const CircleAvatar(
-                      radius: 54,
-                      child: Icon(Icons.person_outline),
+                    context.gapMD,
+                    Text(
+                      customer.displayName,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  context.gapMD,
-
-                  Text(
-                    customer.displayName,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
 
-              context.gapXL,
 
               /// User customer card
               CardList01(
+                padding: context.paddingSM,
                 children: [
                   ListTile(
                     leading: const Icon(Icons.phone_outlined),
@@ -78,6 +81,7 @@ class ProfileScreen01 extends StatelessWidget {
 
               /// My orders card
               CardList01(
+                padding: context.paddingSM,
                 children: [
                   const ListTile(
                     title: Text('My Orders'),
@@ -99,6 +103,7 @@ class ProfileScreen01 extends StatelessWidget {
 
               /// Profile options
               CardList01(
+                padding: context.paddingSM,
                 children: [
                   const ListTile(
                     leading: Icon(Icons.edit_outlined),

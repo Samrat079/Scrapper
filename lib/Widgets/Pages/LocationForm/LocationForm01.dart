@@ -14,7 +14,6 @@ import 'package:scrapper/theme/theme_extensions.dart';
 
 import '../../Custome/CenterColumn/CenterColumn04.dart';
 
-
 class LocationForm01 extends StatefulWidget {
   const LocationForm01({super.key});
 
@@ -123,15 +122,21 @@ class _LocationForm01State extends State<LocationForm01>
                 name: 'place',
                 readOnly: true,
                 validator: FormBuilderValidators.required(),
+
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 onTap: () => showSearch<NominatimResponse?>(
                   context: context,
                   delegate: EncodingDelegate01(),
                 ).then((place) => _updatePlace(place)),
                 decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.location_pin),
+                  prefixIcon: Icon(
+                    Icons.location_pin,
+                    color: context.colorScheme.secondary,
+                  ),
                   suffixIcon: const Icon(Icons.edit_outlined),
                   labelText: 'Area/Locality',
+                  filled: true,
+                  fillColor: context.colorScheme.surfaceContainer,
                 ),
               ),
 
@@ -143,8 +148,13 @@ class _LocationForm01State extends State<LocationForm01>
                 validator: FormBuilderValidators.required(),
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.house_outlined),
+                  prefixIcon: Icon(
+                    Icons.house_outlined,
+                    color: context.colorScheme.secondary,
+                  ),
                   labelText: 'House no., Flat, Floor',
+                  filled: true,
+                  fillColor: context.colorScheme.surfaceContainer,
                 ),
               ),
               context.gapMD,
@@ -159,6 +169,8 @@ class _LocationForm01State extends State<LocationForm01>
                     onChanged: (phone) => field.didChange(phone.completeNumber),
                     initialCountryCode: 'IN',
                     decoration: InputDecoration(
+                      filled: true,
+                      fillColor: context.colorScheme.surfaceContainer,
                       labelText: 'Contact number',
                       helperText:
                           'The sanitation worker will use this to contact you',
