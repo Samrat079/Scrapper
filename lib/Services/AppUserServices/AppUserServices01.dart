@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:scrapper/Models/Customer/Customer01.dart';
 import 'package:scrapper/Models/AppUser/AppUser01.dart';
 import 'package:scrapper/Services/OrderServices/Order01Service.dart';
-import 'package:scrapper/Services/OrderServices/Order01Service02.dart';
 
 class AppUserServices01 extends ValueNotifier<AppUser01> {
   /// 🔒 Singleton
@@ -60,7 +59,6 @@ class AppUserServices01 extends ValueNotifier<AppUser01> {
       /// listeners
       if (isLoggedIn) {
         Order01Service().init();
-        Order01Service02().init();
       }
     });
   }
@@ -117,7 +115,6 @@ class AppUserServices01 extends ValueNotifier<AppUser01> {
 
     value = current;
     Order01Service().init();
-    Order01Service02().init();
     return current;
   }
 
@@ -136,8 +133,7 @@ class AppUserServices01 extends ValueNotifier<AppUser01> {
 
     value = current;
 
-    Order01Service().dispose();
-    Order01Service02().dispose();
+    Order01Service().reset();
   }
 
   /// ❌ Delete user

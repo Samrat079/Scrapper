@@ -6,13 +6,13 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:scrapper/Services/AppUserServices/AppUserServices01.dart';
 import 'package:scrapper/theme/theme_extensions.dart';
 
-import '../../Custome/CenterColumn/CenterColumn04.dart';
+import '../../../Custome/CenterColumn/CenterColumn04.dart';
 
 class AddNumber01 extends StatefulWidget {
   final PageController _controller;
 
   const AddNumber01({super.key, required PageController controller})
-    : _controller = controller;
+      : _controller = controller;
 
   @override
   State<AddNumber01> createState() => _AddNumber01State();
@@ -22,7 +22,13 @@ class _AddNumber01State extends State<AddNumber01> {
   final _addNumberKey = GlobalKey<FormBuilderState>();
   bool isLoading = false;
 
-  void clear() => _addNumberKey.currentState!.reset();
+  void clear() {
+    _addNumberKey.currentState!.reset();
+    widget._controller.previousPage(
+      duration: Duration(seconds: 1),
+      curve: Curves.easeInOut,
+    );
+  }
 
   void submitHandler() async {
     setState(() => isLoading = true);
@@ -32,17 +38,18 @@ class _AddNumber01State extends State<AddNumber01> {
       AppUserServices01()
           .sendOtp(number)
           .then(
-            (_) => widget._controller.nextPage(
+            (_) =>
+            widget._controller.nextPage(
               duration: Duration(seconds: 1),
               curve: Curves.easeInOut,
             ),
-          )
+      )
           .onError<FirebaseAuthException>((e, stackTrace) {
-            _addNumberKey.currentState?.fields['Phone']?.invalidate(
-              e.message.toString(),
-            );
-            setState(() => isLoading = false);
-          });
+        _addNumberKey.currentState?.fields['Phone']?.invalidate(
+          e.message.toString(),
+        );
+        setState(() => isLoading = false);
+      });
     }
   }
 
@@ -84,6 +91,7 @@ class _AddNumber01State extends State<AddNumber01> {
 
           context.gapMD,
 
+
           ElevatedButton(
             onPressed: isLoading ? null : submitHandler,
             child: Text('Submit'),
@@ -95,7 +103,7 @@ class _AddNumber01State extends State<AddNumber01> {
               backgroundColor: context.colorScheme.surfaceContainerHigh,
               foregroundColor: context.colorScheme.onSurface,
             ),
-            child: Text('Clear'),
+            child: Text('Previous'),
           ),
         ],
       ),

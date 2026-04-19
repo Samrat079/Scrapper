@@ -7,7 +7,16 @@ import 'package:scrapper/Models/Orders/Order01.dart';
 import 'package:scrapper/Services/AppUserServices/AppUserServices01.dart';
 
 class Order01Service extends ValueNotifier<Order01?> {
-  Order01Service() : super(null);
+  /// Needs singleton as only one curr order
+  /// can exist on one application
+  static final Order01Service _instance = Order01Service._internal();
+
+  Order01Service._internal() : super(null);
+
+  factory Order01Service() => _instance;
+
+  /// For loading state
+  bool isLoading = false;
 
   StreamSubscription<QuerySnapshot<Order01>>? _orderSub;
 
@@ -21,8 +30,15 @@ class Order01Service extends ValueNotifier<Order01?> {
   /// init
   void init() {
     final uid = AppUserServices01().current.uid;
-    if (uid == null) return;
 
+    /// loading state needs notificator to work
+    if (uid == null) {
+      isLoading = false;
+      notifyListeners();
+      return;
+    }
+
+    /// Cancels any prev subscription
     _orderSub?.cancel();
 
     _orderSub = _ref
@@ -38,14 +54,22 @@ class Order01Service extends ValueNotifier<Order01?> {
           } else {
             value = snapshot.docs.first.data();
           }
+          isLoading = false;
+          notifyListeners();
         });
   }
 
-  /// dispose
-  @override
-  void dispose() {
+  /// dispose 2 ///
+  /// Conventional dispose didn't work
+  /// would continues to listener after logout
+  /// moved on to reset removes everything and
+  /// notifies listeners
+  void reset() {
     _orderSub?.cancel();
-    super.dispose();
+    _orderSub = null;
+    value = null;
+    isLoading = false;
+    notifyListeners();
   }
 
   Future<void> placeOrder(double price, Address02 address) async {
@@ -65,18 +89,8 @@ class Order01Service extends ValueNotifier<Order01?> {
   }
 
   Future<void> cancelCurrOrder() async {
+    value = null;
     final id = value?.uid;
     await _ref.doc(id).update({'status': Order01Status.cancelled.name});
-    value = null;
   }
-
-  Future<void> statusById(String id, Order01Status status) {
-    return _ref.doc(id).update({'status': status.name});
-  }
-
-  /// Extra streams if needed
-  Stream<QuerySnapshot<Order01>> getAllOrders() => _ref.snapshots();
-
-  Stream<QuerySnapshot<Order01>> getAllByStatus(Order01Status status) =>
-      _ref.where('status', isEqualTo: status.name).snapshots();
 }

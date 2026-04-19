@@ -6,7 +6,7 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:scrapper/Services/AppUserServices/AppUserServices01.dart';
 import 'package:scrapper/theme/theme_extensions.dart';
 
-import '../../Custome/CenterColumn/CenterColumn04.dart';
+import '../../../Custome/CenterColumn/CenterColumn04.dart';
 
 class AddOtp01 extends StatefulWidget {
   final PageController _controller;

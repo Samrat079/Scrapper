@@ -5,6 +5,8 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:scrapper/Models/Orders/Order01.dart';
 import 'package:scrapper/Services/OrderServices/Order01Service.dart';
+import 'package:scrapper/Widgets/Custome/Drawers/Drawer01.dart';
+import 'package:scrapper/Widgets/Pages/HomeScreen/HomeScreen01.dart';
 import 'package:scrapper/theme/theme_extensions.dart';
 
 import '../../Custome/CenterColumn/CenterColumn04.dart';
@@ -14,14 +16,12 @@ class CurrOrderScreen01 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<ScaffoldState> key = GlobalKey();
     return ValueListenableBuilder<Order01?>(
       valueListenable: Order01Service(),
       builder: (context, order, _) {
         if (order == null) {
-          return Scaffold(
-            appBar: AppBar(),
-            body: Center(child: Text('Thre is not data')),
-          );
+          return Center(child: CircularProgressIndicator());
         }
 
         final coordinates = LatLng(
@@ -31,11 +31,22 @@ class CurrOrderScreen01 extends StatelessWidget {
 
         void cancelOrder() async {
           await Order01Service().cancelCurrOrder();
-          Navigator.pop(context);
         }
 
         return Scaffold(
-          appBar: AppBar(),
+          key: key,
+          extendBodyBehindAppBar: true,
+          drawer: Drawer01(),
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            leading: IconButton.filled(
+              onPressed: () => key.currentState!.openDrawer(),
+              icon: Icon(Icons.menu_outlined),
+              style: IconButton.styleFrom(
+                backgroundColor: context.colorScheme.surface,
+              ),
+            ),
+          ),
           body: FlutterMap(
             options: MapOptions(initialCenter: coordinates, initialZoom: 18),
             children: [
@@ -61,22 +72,36 @@ class CurrOrderScreen01 extends StatelessWidget {
           bottomSheet: BottomSheet(
             onClosing: () {},
             builder: (context) {
+
               /// Temporary testing logic change this to == in prod
               if (order.sanitarian != null) {
                 return CenterColumn04(
+                  padding: context.paddingMD,
                   children: [
+                    context.gapMD,
                     Center(child: CircularProgressIndicator()),
                     context.gapMD,
-                    Text('Looking for sanitarians in your area'),
+                    Text(
+                      'Looking for sanitarians in your area',
+                      textAlign: TextAlign.center,
+                    ),
+                    context.gapMD,
+                    ElevatedButton(
+                      onPressed: cancelOrder,
+                      child: Text('Cancel'),
+                    ),
                   ],
                 );
               }
 
               return CenterColumn04(
+                padding: context.paddingLG,
                 children: [
                   Text(order.address.place.displayName!),
                   context.gapMD,
                   Text(order.address.houseNo),
+                  context.gapMD,
+                  Text(order.sanitarian?.displayName ?? 'Sanitarian name'),
                   context.gapMD,
                   ElevatedButton(onPressed: cancelOrder, child: Text('Cancel')),
                 ],
