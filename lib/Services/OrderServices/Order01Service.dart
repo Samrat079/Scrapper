@@ -89,8 +89,8 @@ class Order01Service extends ValueNotifier<Order01?> {
   }
 
   Future<void> cancelCurrOrder() async {
-    value = null;
     final id = value?.uid;
+    value = null;
     await _ref.doc(id).update({'status': Order01Status.cancelled.name});
   }
 }
