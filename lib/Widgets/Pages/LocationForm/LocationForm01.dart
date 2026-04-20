@@ -100,10 +100,10 @@ class _LocationForm01State extends State<LocationForm01>
               if (_selectedLocation != null)
                 Marker(
                   point: _selectedLocation!,
-                  child: const Icon(
+                  child: Icon(
                     Icons.location_pin,
                     size: 40,
-                    color: Colors.red,
+                    color: context.colorScheme.secondary,
                   ),
                 ),
             ],

@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:scrapper/Widgets/Pages/LoginScreen/Widgets/EditProfileView01.dart';
 import 'package:scrapper/Widgets/Pages/LoginScreen/Widgets/Welcome01.dart';
+import 'package:scrapper/Widgets/Pages/LoginScreen/Widgets/Welcome02.dart';
 
 import 'Widgets/AddNumber01.dart';
 import 'Widgets/AddOtp01.dart';
@@ -18,8 +20,10 @@ class LoginScreen01 extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         children: [
           Welcome01(controller: controller),
+          Welcome02(controller: controller),
           AddNumber01(controller: controller),
           AddOtp01(controller: controller),
+          EditProfileView01(controller: controller)
         ],
       ),
     );

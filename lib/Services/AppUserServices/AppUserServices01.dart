@@ -124,6 +124,15 @@ class AppUserServices01 extends ValueNotifier<AppUser01> {
     return doc.data()!;
   }
 
+  Future<void> updateAppUser(String displayName) async {
+    await _authUser?.updateDisplayName(displayName);
+    await _authUser?.reload();
+    _authUser = _auth.currentUser;
+    await _users.doc(current.uid).update({'displayName': displayName});
+    _customer?.displayName = displayName;
+    value = current;
+  }
+
   /// 🚪 Logout
   Future<void> logout() async {
     await _auth.signOut();

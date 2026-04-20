@@ -56,7 +56,6 @@ class ProfileScreen01 extends StatelessWidget {
                 ),
               ),
 
-
               /// User customer card
               CardList01(
                 padding: context.paddingSM,
@@ -105,27 +104,29 @@ class ProfileScreen01 extends StatelessWidget {
               CardList01(
                 padding: context.paddingSM,
                 children: [
-                  const ListTile(
-                    leading: Icon(Icons.edit_outlined),
-                    title: Text('Edit Profile'),
-                    trailing: Icon(Icons.arrow_forward_ios_outlined),
+                  ListTile(
+                    leading: const Icon(Icons.edit_outlined),
+                    title: const Text('Edit Profile'),
+                    trailing: const Icon(Icons.arrow_forward_ios_outlined),
+                    onTap: () => Navigator.pushNamed(context, '/edit_profile'),
                   ),
                   ListTile(
                     textColor: Theme.of(context).colorScheme.error,
                     iconColor: Theme.of(context).colorScheme.error,
                     leading: const Icon(Icons.logout_outlined),
                     title: const Text('Logout'),
-                    onTap: () async {
-                      await AppUserServices01().logout();
-                      Navigator.pop(context);
-                    },
+                    onTap: () => AppUserServices01().logout().then(
+                      (_) => Navigator.pop(context),
+                    ),
                   ),
                   ListTile(
                     textColor: Theme.of(context).colorScheme.error,
                     iconColor: Theme.of(context).colorScheme.error,
                     leading: const Icon(Icons.delete_outline),
                     title: const Text('Delete profile'),
-                    onTap: () => AppUserServices01().delete(),
+                    onTap: () => AppUserServices01().delete().then(
+                      (_) => Navigator.pop(context),
+                    ),
                   ),
                 ],
               ),

@@ -40,7 +40,7 @@ class _AddNumber01State extends State<AddNumber01> {
           .then(
             (_) =>
             widget._controller.nextPage(
-              duration: Duration(seconds: 1),
+              duration: Duration(milliseconds: 500),
               curve: Curves.easeInOut,
             ),
       )

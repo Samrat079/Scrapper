@@ -1,0 +1,32 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:scrapper/Services/AppUserServices/AppUserServices01.dart';
+import 'package:scrapper/Widgets/Custome/CenterColumn/CenterColumn04.dart';
+import 'package:scrapper/Widgets/Custome/Forms/EditProfileForm01.dart';
+import 'package:scrapper/theme/theme_extensions.dart';
+
+
+class EditProfileScreen01 extends StatelessWidget {
+  const EditProfileScreen01({super.key});
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(),
+    body: CenterColumn04(
+      centerVertically: true,
+      children: [
+        Text(
+          'Edit user',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        context.gapMD,
+        EditProfileForm01(
+          onSubmit: (data) => AppUserServices01()
+              .updateAppUser(data['displayName'])
+              .then((_) => Navigator.pop(context)),
+        ),
+      ],
+    ),
+  );
+}

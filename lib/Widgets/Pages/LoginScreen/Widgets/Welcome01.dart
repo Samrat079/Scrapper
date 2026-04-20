@@ -21,8 +21,8 @@ class Welcome01 extends StatelessWidget {
 
         RichText01(
           text1: 'Our sanitarians take',
-          text2: ' your trash from your doorstep and ',
-          text3: 'dispose them far away',
+          text2: ' your trash from  ',
+          text3: 'your doorstep',
           highlight: context.colorScheme.primary,
         ),
 
@@ -30,8 +30,8 @@ class Welcome01 extends StatelessWidget {
 
         ElevatedButton(
           onPressed: () => _controller.nextPage(
-            duration: Duration(seconds: 1),
-            curve: Curves.easeInOut,
+            duration: Duration(milliseconds: 500),
+            curve: Curves.easeIn,
           ),
           style: ElevatedButton.styleFrom(
             backgroundColor: context.colorScheme.primary,
@@ -41,10 +41,9 @@ class Welcome01 extends StatelessWidget {
         ),
         context.gapMD,
         ElevatedButton(
-          onPressed: () => _controller.animateTo(
-            1,
-            duration: Duration(seconds: 1),
-            curve: Curves.easeInOut,
+          onPressed: () => _controller.nextPage(
+            duration: Duration(milliseconds: 500),
+            curve: Curves.easeIn,
           ),
           style: ElevatedButton.styleFrom(
             backgroundColor: context.colorScheme.surfaceContainer,

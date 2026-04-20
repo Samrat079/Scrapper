@@ -2,8 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Customer01 {
-  final String uid, displayName, phoneNumber, email, photoUrl;
+  final String uid, phoneNumber, email, photoUrl;
   final Timestamp createdAt;
+  String displayName;
 
   Customer01({
     required this.uid,

@@ -31,10 +31,9 @@ class _AddOtp01State extends State<AddOtp01> {
       AppUserServices01()
           .verifyOtp(otp)
           .then(
-            (e) => Navigator.pushReplacementNamed(
-              context,
-              '/profile',
-              arguments: e.customer01,
+            (e) => widget._controller.nextPage(
+              duration: Duration(milliseconds: 500),
+              curve: Curves.easeIn,
             ),
           )
           .onError<FirebaseAuthException>((e, stackTrace) {
@@ -42,6 +41,7 @@ class _AddOtp01State extends State<AddOtp01> {
               e.message.toString(),
             );
             setState(() => isLoading = false);
+            return;
           });
     }
   }
