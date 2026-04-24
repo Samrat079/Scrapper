@@ -14,6 +14,7 @@ class AddressesScreen01 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final add2Service = Address02Services(customer.uid);
+    final nothing = 'ngi-g';
     void addAddress()async{
       final address = await Navigator.pushNamed(context, '/location01');
       if (address == null || address is! Address02) return;
