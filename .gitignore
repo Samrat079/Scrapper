@@ -48,4 +48,3 @@ app.*.map.json
 **/android/*.keystore
 **/android/*.jks
 **/android/*.txt
-**/android/key.properties
