@@ -142,7 +142,7 @@ class AppUserServices01 extends ValueNotifier<AppUser01> {
 
     value = current;
 
-    Order01Service().reset();
+    Order01Service().stop();
   }
 
   /// ❌ Delete user

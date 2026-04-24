@@ -45,7 +45,7 @@ class Order01Service extends ValueNotifier<Order01?> {
         .where('customer.uid', isEqualTo: uid)
         .where(
           'status',
-          whereIn: [Order01Status.requested.name, Order01Status.assigned.name],
+          whereIn: [Order01Status.assigned.name, Order01Status.requested.name],
         )
         .snapshots()
         .listen((snapshot) {
@@ -64,7 +64,7 @@ class Order01Service extends ValueNotifier<Order01?> {
   /// would continues to listener after logout
   /// moved on to reset removes everything and
   /// notifies listeners
-  void reset() {
+  void stop() {
     _orderSub?.cancel();
     _orderSub = null;
     value = null;

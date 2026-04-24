@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 
-import 'package:flutter/cupertino.dart';
-
 class CenterColumn04 extends StatelessWidget {
   final List<Widget> children;
 
@@ -13,6 +11,7 @@ class CenterColumn04 extends StatelessWidget {
   /// Behavior
   final bool centerVertically;
   final ScrollPhysics? physics;
+  final ScrollController? scrollController;
 
   const CenterColumn04({
     super.key,
@@ -26,6 +25,7 @@ class CenterColumn04 extends StatelessWidget {
 
     this.centerVertically = false,
     this.physics,
+    this.scrollController,
   });
 
   @override
@@ -33,8 +33,10 @@ class CenterColumn04 extends StatelessWidget {
     final column = Padding(
       padding: padding,
       child: Column(
-        mainAxisAlignment:
-        centerVertically ? MainAxisAlignment.center : mainAxisAlignment,
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: centerVertically
+            ? MainAxisAlignment.center
+            : mainAxisAlignment,
         crossAxisAlignment: crossAxisAlignment,
         children: children,
       ),
@@ -42,6 +44,7 @@ class CenterColumn04 extends StatelessWidget {
 
     if (!centerVertically) {
       return SingleChildScrollView(
+        controller: scrollController,
         physics: physics,
         child: column,
       );
@@ -50,6 +53,7 @@ class CenterColumn04 extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         return SingleChildScrollView(
+          controller: scrollController,
           physics: physics,
           child: ConstrainedBox(
             constraints: BoxConstraints(minHeight: constraints.maxHeight),

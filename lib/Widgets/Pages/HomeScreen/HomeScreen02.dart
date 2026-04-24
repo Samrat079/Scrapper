@@ -9,11 +9,10 @@ class HomeScreen02 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final service = Order01Service();
     return ValueListenableBuilder(
-      valueListenable: service,
+      valueListenable: Order01Service(),
       builder: (context, order, _) {
-        if (service.isLoading) {
+        if (Order01Service().isLoading) {
           return Scaffold(
             // appBar: AppBar(),
             // drawer: Drawer01(),

@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:latlong2/latlong.dart';
 
 class Sanitarian01 {
   final String uid, displayName, phoneNumber, email, photoUrl;
   final Timestamp createdAt;
+  GeoPoint? currLocation;
 
   Sanitarian01({
     required this.uid,
@@ -11,6 +13,7 @@ class Sanitarian01 {
     required this.email,
     required this.createdAt,
     required this.photoUrl,
+    this.currLocation,
   });
 
   factory Sanitarian01.fromFirestore(
@@ -23,16 +26,23 @@ class Sanitarian01 {
     email: snapshot.data()!['email'] ?? 'client default value',
     createdAt: snapshot.data()!['createdAt'] ?? Timestamp.now(),
     photoUrl: snapshot.data()!['photoUrl'],
+    currLocation: snapshot.data()!['currLocation'] as GeoPoint?,
   );
 
-  factory Sanitarian01.fromJson(Map<String, dynamic> json) => Sanitarian01(
-    uid: json['uid'],
-    displayName: json['displayName'] ?? 'client default value',
-    phoneNumber: json['phoneNumber'] ?? 'client default value',
-    email: json['email'] ?? 'client default value',
-    createdAt: json['createdAt'],
-    photoUrl: json['photoUrl'],
-  );
+  factory Sanitarian01.fromJson(Map<String, dynamic> json) {
+    print("Sanitarian from json $json");
+    return Sanitarian01(
+      uid: json['uid'],
+      displayName: json['displayName'] ?? 'client default value',
+      phoneNumber: json['phoneNumber'] ?? 'client default value',
+      email: json['email'] ?? 'client default value',
+      createdAt: json['createdAt'],
+      photoUrl: json['photoUrl'],
+      currLocation: json['currLocation'] is GeoPoint
+          ? json['currLocation']
+          : null,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
     'uid': uid,
@@ -41,5 +51,12 @@ class Sanitarian01 {
     'email': email,
     'photoUrl': photoUrl,
     'createdAt': createdAt,
+    'currLocation': currLocation,
   };
+
+  /// Getters
+  LatLng? get latLng {
+    if (currLocation == null) return null;
+    return LatLng(currLocation!.latitude, currLocation!.longitude);
+  }
 }

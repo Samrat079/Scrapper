@@ -8,6 +8,7 @@ import 'package:scrapper/Services/OrderServices/Order01Service.dart';
 import 'package:scrapper/Widgets/Custome/Drawers/Drawer01.dart';
 import 'package:scrapper/Widgets/Pages/HomeScreen/HomeScreen01.dart';
 import 'package:scrapper/theme/theme_extensions.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../Custome/CenterColumn/CenterColumn04.dart';
 
@@ -24,71 +25,81 @@ class CurrOrderScreen01 extends StatelessWidget {
           return Center(child: CircularProgressIndicator());
         }
 
-        final coordinates = LatLng(
-          double.parse(order.address.place.lat!),
-          double.parse(order.address.place.lon!),
-        );
-
-        void cancelOrder() async {
-          await Order01Service().cancelCurrOrder();
-        }
-
         return Scaffold(
           key: key,
           extendBodyBehindAppBar: true,
           drawer: Drawer01(),
           appBar: AppBar(
             backgroundColor: Colors.transparent,
+            surfaceTintColor: Colors.transparent,
             leading: IconButton.filled(
               onPressed: () => key.currentState!.openDrawer(),
-              icon: Icon(Icons.menu_outlined),
+              icon: const Icon(Icons.menu_outlined),
               style: IconButton.styleFrom(
                 backgroundColor: context.colorScheme.surface,
               ),
             ),
           ),
-          body: FlutterMap(
-            options: MapOptions(initialCenter: coordinates, initialZoom: 18),
-            children: [
-              TileLayer(
-                urlTemplate:
-                    "https://mt.google.com/vt/lyrs=m&x={x}&y={y}&z={z}",
-                userAgentPackageName: "com.example.scrapper",
-              ),
-              MarkerLayer(
-                markers: [
-                  Marker(
-                    point: coordinates,
-                    child: const Icon(
-                      Icons.location_pin,
-                      size: 40,
-                      color: Colors.red,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          bottomSheet: BottomSheet(
-            onClosing: () {},
-            builder: (context) {
 
-              /// Temporary testing logic change this to == in prod
-              if (order.sanitarian != null) {
+          body: SlidingUpPanel(
+            /// 🔥 MAP GOES HERE
+            body: FlutterMap(
+              options: MapOptions(
+                initialCenter: order.destination,
+                initialZoom: 18,
+              ),
+              children: [
+                TileLayer(
+                  urlTemplate:
+                      "https://mt.google.com/vt/lyrs=m&x={x}&y={y}&z={z}",
+                  userAgentPackageName: "com.example.scrapper",
+                ),
+
+                MarkerLayer(
+                  markers: [
+                    Marker(
+                      point: order.destination,
+                      child: const Icon(
+                        Icons.location_pin,
+                        size: 40,
+                        color: Colors.red,
+                      ),
+                    ),
+                    if (order.sanitarian != null)
+                      Marker(
+                        point: order.sanitarian?.latLng ?? order.destination,
+                        child: Icon(
+                          CupertinoIcons.car_detailed,
+                          size: 40,
+                          color: context.colorScheme.primary,
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+            ),
+
+            parallaxEnabled: true,
+            borderRadius: BorderRadius.vertical(top: context.radiusMD.topLeft),
+            color: context.colorScheme.surface,
+            panelBuilder: (ScrollController controller) {
+              if (order.sanitarian == null) {
                 return CenterColumn04(
                   padding: context.paddingMD,
+                  scrollController: controller,
                   children: [
                     context.gapMD,
-                    Center(child: CircularProgressIndicator()),
+                    const Center(child: CircularProgressIndicator()),
                     context.gapMD,
-                    Text(
+                    const Text(
                       'Looking for sanitarians in your area',
                       textAlign: TextAlign.center,
                     ),
+                    Text(order.address.place.name.toString()),
                     context.gapMD,
                     ElevatedButton(
-                      onPressed: cancelOrder,
-                      child: Text('Cancel'),
+                      onPressed: () => Order01Service().cancelCurrOrder(),
+                      child: const Text('Cancel'),
                     ),
                   ],
                 );
@@ -96,14 +107,22 @@ class CurrOrderScreen01 extends StatelessWidget {
 
               return CenterColumn04(
                 padding: context.paddingLG,
+                scrollController: controller,
                 children: [
                   Text(order.address.place.displayName!),
                   context.gapMD,
                   Text(order.address.houseNo),
                   context.gapMD,
-                  Text(order.sanitarian?.displayName ?? 'Sanitarian name'),
+                  Text(order.sanitarian!.displayName),
                   context.gapMD,
-                  ElevatedButton(onPressed: cancelOrder, child: Text('Cancel')),
+                  Text(order.sanitarian!.phoneNumber),
+                  context.gapMD,
+                  Text(order.sanitarian!.latLng.toString() ?? 'No data'),
+                  context.gapMD,
+                  ElevatedButton(
+                    onPressed: () => Order01Service().cancelCurrOrder(),
+                    child: const Text('Cancel'),
+                  ),
                 ],
               );
             },
