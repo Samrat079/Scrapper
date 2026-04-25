@@ -9,12 +9,8 @@ import 'package:scrapper/theme/app_theme.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  init();
-  runApp(const MyApp());
-}
-
-void init() async {
   await AppUserServices01().init();
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

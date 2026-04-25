@@ -29,20 +29,17 @@ class Sanitarian01 {
     currLocation: snapshot.data()!['currLocation'] as GeoPoint?,
   );
 
-  factory Sanitarian01.fromJson(Map<String, dynamic> json) {
-    print("Sanitarian from json $json");
-    return Sanitarian01(
-      uid: json['uid'],
-      displayName: json['displayName'] ?? 'client default value',
-      phoneNumber: json['phoneNumber'] ?? 'client default value',
-      email: json['email'] ?? 'client default value',
-      createdAt: json['createdAt'],
-      photoUrl: json['photoUrl'],
-      currLocation: json['currLocation'] is GeoPoint
-          ? json['currLocation']
-          : null,
-    );
-  }
+  factory Sanitarian01.fromJson(Map<String, dynamic> json) => Sanitarian01(
+    uid: json['uid'],
+    displayName: json['displayName'] ?? 'client default value',
+    phoneNumber: json['phoneNumber'] ?? 'client default value',
+    email: json['email'] ?? 'client default value',
+    createdAt: json['createdAt'],
+    photoUrl: json['photoUrl'],
+    currLocation: json['currLocation'] is GeoPoint
+        ? json['currLocation']
+        : null,
+  );
 
   Map<String, dynamic> toJson() => {
     'uid': uid,

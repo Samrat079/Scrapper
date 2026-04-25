@@ -115,10 +115,6 @@ class CurrOrderScreen01 extends StatelessWidget {
                   context.gapMD,
                   Text(order.sanitarian!.displayName),
                   context.gapMD,
-                  Text(order.sanitarian!.phoneNumber),
-                  context.gapMD,
-                  Text(order.sanitarian!.latLng.toString() ?? 'No data'),
-                  context.gapMD,
                   ElevatedButton(
                     onPressed: () => Order01Service().cancelCurrOrder(),
                     child: const Text('Cancel'),
