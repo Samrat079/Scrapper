@@ -49,11 +49,14 @@ class Order01Service extends ValueNotifier<Order01?> {
 
   Future<void> updateValue(QuerySnapshot<Order01> snapshot) async {
     final curr = snapshot.docs.first.data();
-    if (curr.sanitarian == null && curr.sanitarian?.latLng != null)  {
+    if (curr.sanitarian == null && curr.sanitarian?.latLng == null) {
       value = curr;
       return;
     }
-    curr.routesRes = await OSRMService01().getRouteGeoJson(curr.sanitarian!.latLng!, curr.destination);
+    curr.routesRes = await OSRMService01().getRouteGeoJson(
+      curr.sanitarian!.latLng!,
+      curr.destination,
+    );
     value = curr;
   }
 

@@ -8,8 +8,9 @@ import 'package:scrapper/theme/theme_extensions.dart';
 
 class EditProfileForm01 extends StatefulWidget {
   final Function(Map<String, dynamic>) onSubmit;
+  final Function() onCancel;
 
-  const EditProfileForm01({super.key, required this.onSubmit});
+  const EditProfileForm01({super.key, required this.onSubmit, required this.onCancel});
 
   @override
   State<EditProfileForm01> createState() => _EditProfileForm01State();
@@ -19,8 +20,6 @@ class _EditProfileForm01State extends State<EditProfileForm01> {
   final _formKey = GlobalKey<FormBuilderState>();
   bool isLoading = false;
   final AppUser01 currUser = AppUserServices01().current;
-
-  void clear() => _formKey.currentState!.reset();
 
   void submitHandler() async {
     if (_formKey.currentState?.saveAndValidate() ?? false) {
@@ -40,77 +39,7 @@ class _EditProfileForm01State extends State<EditProfileForm01> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          /// Photo URL
-          // FormBuilderTextField(
-          //   name: 'photoUrl',
-          //   validator: FormBuilderValidators.url(requireProtocol: true),
-          //   autovalidateMode: AutovalidateMode.onUserInteraction,
-          //   decoration: InputDecoration(
-          //     prefixIcon: Icon(
-          //       Icons.image_outlined,
-          //       color: context.colorScheme.secondary,
-          //     ),
-          //     labelText: 'Photo URL',
-          //     filled: true,
-          //     fillColor: context.colorScheme.surfaceContainer,
-          //     enabledBorder: OutlineInputBorder(
-          //       borderRadius: context.radiusMD,
-          //       borderSide: BorderSide(color: context.colorScheme.outline),
-          //     ),
-          //     focusedBorder: OutlineInputBorder(
-          //       borderRadius: context.radiusMD,
-          //       borderSide: BorderSide(
-          //         color: context.colorScheme.outline,
-          //       ),
-          //     ),
-          //   ),
-          // ),
-
-          // context.gapMD,
-
-          /// Phone Number
-          // FormBuilderTextField(
-          //   name: 'phoneNumber',
-          //   validator: FormBuilderValidators.phoneNumber(),
-          //   keyboardType: TextInputType.phone,
-          //   autovalidateMode: AutovalidateMode.onUserInteraction,
-          //   decoration: InputDecoration(
-          //     prefixIcon: Icon(
-          //       Icons.phone_outlined,
-          //       color: context.colorScheme.secondary,
-          //     ),
-          //     labelText: 'Phone Number',
-          //     filled: true,
-          //     fillColor: context.colorScheme.surfaceContainer,
-          //   ),
-          // ),
-          // context.gapMD,
-
-          // context.gapMD,
-
-          /// Email
-          // FormBuilderTextField(
-          //   name: 'email',
-          //   validator: FormBuilderValidators.email(checkNullOrEmpty: false),
-          //   autovalidateMode: AutovalidateMode.onUserInteraction,
-          //   decoration: InputDecoration(
-          //     prefixIcon: Icon(
-          //       Icons.email_outlined,
-          //       color: context.colorScheme.secondary,
-          //     ),
-          //     labelText: 'Email (optional)',
-          //     filled: true,
-          //     fillColor: context.colorScheme.surfaceContainer,
-          //     enabledBorder: OutlineInputBorder(
-          //       borderRadius: context.radiusMD,
-          //       borderSide: BorderSide(color: context.colorScheme.outline),
-          //     ),
-          //     focusedBorder: OutlineInputBorder(
-          //       borderRadius: context.radiusMD,
-          //       borderSide: BorderSide(color: context.colorScheme.outline),
-          //     ),
-          //   ),
-          // ),
+          /// Add more profile editing fields in future
 
           /// Display Name
           FormBuilderTextField(
@@ -146,12 +75,12 @@ class _EditProfileForm01State extends State<EditProfileForm01> {
           ),
           context.gapMD,
           ElevatedButton(
-            onPressed: clear,
+            onPressed: widget.onCancel,
             style: ElevatedButton.styleFrom(
               backgroundColor: context.colorScheme.surfaceContainerHigh,
               foregroundColor: context.colorScheme.onSurface,
             ),
-            child: Text('Clear'),
+            child: Text('Cancel'),
           ),
         ],
       ),

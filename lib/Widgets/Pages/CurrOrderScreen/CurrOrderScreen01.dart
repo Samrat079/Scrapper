@@ -7,6 +7,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:scrapper/Models/Orders/Order01.dart';
 import 'package:scrapper/Services/OrderServices/Order01Service.dart';
+import 'package:scrapper/Widgets/Custome/CardList01/CardList01.dart';
 import 'package:scrapper/Widgets/Custome/Drawers/Drawer01.dart';
 import 'package:scrapper/Widgets/Pages/HomeScreen/HomeScreen01.dart';
 import 'package:scrapper/theme/theme_extensions.dart';
@@ -33,7 +34,23 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01> {
     final orderService = Order01Service();
 
     /// Controller
-    final MapController _mapController = MapController();
+    final MapController mapController = MapController();
+    final PanelController panelController = PanelController();
+
+    /// This updates the camera
+    void updateCam(Order01 order) {
+      if (order.sanitarian?.latLng == null) return;
+      final List<LatLng> points = [
+        order.destination,
+        order.sanitarian!.latLng!,
+      ];
+
+      final bounds = LatLngBounds.fromPoints(points);
+
+      mapController.fitCamera(
+        CameraFit.bounds(bounds: bounds, padding: const EdgeInsets.all(80)),
+      );
+    }
 
     return ValueListenableBuilder<Order01?>(
       valueListenable: orderService,
@@ -42,20 +59,7 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01> {
           return Center(child: CircularProgressIndicator());
         }
 
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (order.sanitarian?.latLng != null) {
-            final points = [order.destination, order.sanitarian!.latLng!];
-
-            final bounds = LatLngBounds.fromPoints(points);
-
-            _mapController.fitCamera(
-              CameraFit.bounds(
-                bounds: bounds,
-                padding: const EdgeInsets.all(80),
-              ),
-            );
-          }
-        });
+        WidgetsBinding.instance.addPostFrameCallback((_) => updateCam(order));
 
         return Scaffold(
           key: key,
@@ -74,8 +78,9 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01> {
           ),
 
           body: SlidingUpPanel(
+            controller: panelController,
             body: FlutterMap(
-              mapController: _mapController,
+              mapController: mapController,
               options: MapOptions(
                 initialCenter: order.destination,
                 initialZoom: 18,
@@ -83,15 +88,18 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01> {
               children: [
                 TileLayer(urlTemplate: mapUrl, userAgentPackageName: packageId),
 
-                PolylineLayer(
-                  polylines: [
-                    Polyline(
-                      points: order.routesRes.coordinates,
-                      strokeWidth: 4,
-                      color: context.colorScheme.surface,
-                    ),
-                  ],
-                ),
+                /// Remember to put the not empty check
+                /// else it will error out
+                if (order.routesRes.coordinates.isNotEmpty)
+                  PolylineLayer(
+                    polylines: [
+                      Polyline(
+                        points: order.routesRes.coordinates,
+                        strokeWidth: 4,
+                        color: context.colorScheme.surface,
+                      ),
+                    ],
+                  ),
 
                 MarkerLayer(
                   markers: [
@@ -118,27 +126,43 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01> {
             ),
 
             parallaxEnabled: true,
-            maxHeight: MediaQuery.of(context).size.height * 0.6,
-            borderRadius: BorderRadius.vertical(top: context.radiusMD.topLeft),
+            parallaxOffset: 0.3,
+            borderRadius: BorderRadius.vertical(top: context.radiusLG.topLeft),
             color: context.colorScheme.surface,
             panelBuilder: (ScrollController controller) {
               /// If there is not sanitarian
+              /// Remember to put return statement in this
               if (order.sanitarian == null) {
-                CenterColumn04(
-                  padding: context.paddingMD,
+                panelController.open();
+                return CenterColumn04(
+                  padding: context.paddingLG,
                   scrollController: controller,
                   children: [
+                    Image.asset('assets/Search/search_01.png', height: 200),
                     context.gapMD,
-                    const Center(child: CircularProgressIndicator()),
+                    const Center(child: LinearProgressIndicator()),
                     context.gapMD,
                     const Text(
                       'Looking for sanitarians in your area',
                       textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 20),
                     ),
-                    Text(order.address.place.name.toString()),
+                    CardList01(
+                      children: [
+                        ListTile(
+                          leading: const Icon(Icons.location_pin),
+                          title: Text(order.address.place.name!),
+                          subtitle: Text(order.address.place.displayName!),
+                        ),
+                      ],
+                    ),
                     context.gapMD,
                     ElevatedButton(
                       onPressed: () => Order01Service().cancelCurrOrder(),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: context.colorScheme.errorContainer,
+                        foregroundColor: context.colorScheme.onErrorContainer,
+                      ),
                       child: const Text('Cancel'),
                     ),
                   ],
@@ -146,6 +170,8 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01> {
               }
 
               /// If a sanitarian accepts the order
+              /// this has return so wont crash
+              panelController.open();
               return CenterColumn04(
                 scrollController: controller,
                 children: [
@@ -156,6 +182,8 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01> {
                       imageBuilder: (context, provider) =>
                           CircleAvatar(backgroundImage: provider),
                       placeholder: (context, url) => Icon(Icons.person_outline),
+                      errorWidget: (context, url, error) =>
+                          Icon(Icons.error_outline),
                     ),
                     title: Text(
                       "${order.sanitarian!.displayName} is has accepted your order",
@@ -184,9 +212,12 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01> {
                   ),
                   context.gapMD,
 
-
                   ElevatedButton(
                     onPressed: () => Order01Service().cancelCurrOrder(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: context.colorScheme.errorContainer,
+                      foregroundColor: context.colorScheme.onErrorContainer,
+                    ),
                     child: const Text('Cancel'),
                   ),
                 ],

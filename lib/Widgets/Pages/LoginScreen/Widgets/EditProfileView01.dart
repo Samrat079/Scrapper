@@ -31,6 +31,7 @@ class EditProfileView01 extends StatelessWidget {
         onSubmit: (data) => AppUserServices01()
             .updateAppUser(data['displayName'])
             .then((_) => Navigator.pushReplacementNamed(context, '/profile')),
+        onCancel: () => Navigator.pop(context),
       ),
     ],
   );

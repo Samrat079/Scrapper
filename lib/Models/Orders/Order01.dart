@@ -32,12 +32,7 @@ class Order01 {
     DocumentSnapshot<Map<String, dynamic>> snapshot,
     SnapshotOptions? options,
   ) {
-    final data = snapshot.data();
-
-    if (data == null) {
-      throw Exception("Order document is null");
-    }
-
+    final data = snapshot.data()!;
     final san = data['sanitarian'];
 
     return Order01(
