@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:scrapper/Models/Address/Address02.dart';
 import 'package:scrapper/Models/Orders/Order01.dart';
 import 'package:scrapper/Services/AppUserServices/AppUserServices01.dart';
+import 'package:scrapper/Services/OSRMServices/OSRMService01.dart';
 
 class Order01Service extends ValueNotifier<Order01?> {
   /// Needs singleton as only one curr order
@@ -16,7 +17,6 @@ class Order01Service extends ValueNotifier<Order01?> {
   factory Order01Service() => _instance;
 
   /// For loading state
-  bool isLoading = false;
 
   StreamSubscription<QuerySnapshot<Order01>>? _orderSub;
 
@@ -31,13 +31,6 @@ class Order01Service extends ValueNotifier<Order01?> {
   void init() {
     final uid = AppUserServices01().current.uid;
 
-    /// loading state needs notificator to work
-    if (uid == null) {
-      isLoading = false;
-      notifyListeners();
-      return;
-    }
-
     /// Cancels any prev subscription
     _orderSub?.cancel();
 
@@ -48,27 +41,26 @@ class Order01Service extends ValueNotifier<Order01?> {
           whereIn: [Order01Status.assigned.name, Order01Status.requested.name],
         )
         .snapshots()
-        .listen((snapshot) {
-          if (snapshot.docs.isEmpty) {
-            value = null;
-          } else {
-            value = snapshot.docs.first.data();
-          }
-          isLoading = false;
-          notifyListeners();
+        .listen((snapshot) async {
+          if (snapshot.docs.isEmpty) return value = null;
+          await updateValue(snapshot);
         });
   }
 
-  /// dispose 2 ///
-  /// Conventional dispose didn't work
-  /// would continues to listener after logout
-  /// moved on to reset removes everything and
-  /// notifies listeners
+  Future<void> updateValue(QuerySnapshot<Order01> snapshot) async {
+    final curr = snapshot.docs.first.data();
+    if (curr.sanitarian == null && curr.sanitarian?.latLng != null)  {
+      value = curr;
+      return;
+    }
+    curr.routesRes = await OSRMService01().getRouteGeoJson(curr.sanitarian!.latLng!, curr.destination);
+    value = curr;
+  }
+
   void stop() {
     _orderSub?.cancel();
     _orderSub = null;
     value = null;
-    isLoading = false;
     notifyListeners();
   }
 

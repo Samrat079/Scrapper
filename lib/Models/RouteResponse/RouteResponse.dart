@@ -27,4 +27,10 @@ class RoutesResponse {
     distance = meters;
     duration = seconds;
   }
+
+  Map<String, dynamic> toJson() => {
+    'distance': distance,
+    'duration': duration,
+    'coordinates': coordinates,
+  };
 }

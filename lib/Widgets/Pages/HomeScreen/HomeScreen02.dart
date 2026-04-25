@@ -12,13 +12,6 @@ class HomeScreen02 extends StatelessWidget {
     return ValueListenableBuilder(
       valueListenable: Order01Service(),
       builder: (context, order, _) {
-        if (Order01Service().isLoading) {
-          return Scaffold(
-            // appBar: AppBar(),
-            // drawer: Drawer01(),
-            body: Center(child: CircularProgressIndicator()),
-          );
-        }
         if (order == null) return HomeScreen01();
         return CurrOrderScreen01();
       },
