@@ -91,6 +91,16 @@ class _AddNumber01State extends State<AddNumber01> {
 
           context.gapMD,
 
+          if (isLoading)
+            Column(
+              children: [
+                LinearProgressIndicator(),
+                context.gapSM,
+                Text('Please wait', textAlign: TextAlign.center),
+                context.gapMD,
+              ],
+            ),
+
 
           ElevatedButton(
             onPressed: isLoading ? null : submitHandler,
