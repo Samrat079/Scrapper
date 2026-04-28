@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:scrapper/Widgets/Pages/LoginScreen/Widgets/EditProfileView01.dart';
 import 'package:scrapper/Widgets/Pages/LoginScreen/Widgets/Welcome01.dart';

@@ -53,6 +53,7 @@ dependencies:
   sliding_up_panel:
   duration:
 
+  http: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

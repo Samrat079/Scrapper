@@ -1,22 +1,15 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:duration/duration.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:scrapper/Models/Orders/Order01.dart';
 import 'package:scrapper/Services/OrderServices/Order01Service.dart';
-import 'package:scrapper/Widgets/Custome/CardList01/CardList01.dart';
 import 'package:scrapper/Widgets/Custome/Drawers/Drawer01.dart';
 import 'package:scrapper/Widgets/Pages/CurrOrderScreen/Widget/AcceptedBottomSheet01.dart';
 import 'package:scrapper/Widgets/Pages/CurrOrderScreen/Widget/CurrOrderMap01.dart';
 import 'package:scrapper/Widgets/Pages/CurrOrderScreen/Widget/SearchingBottomSheet01.dart';
-import 'package:scrapper/Widgets/Pages/HomeScreen/HomeScreen01.dart';
 import 'package:scrapper/theme/theme_extensions.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-
-import '../../Custome/CenterColumn/CenterColumn04.dart';
 
 class CurrOrderScreen01 extends StatefulWidget {
   const CurrOrderScreen01({super.key});
@@ -25,7 +18,8 @@ class CurrOrderScreen01 extends StatefulWidget {
   State<CurrOrderScreen01> createState() => _CurrOrderScreen01State();
 }
 
-class _CurrOrderScreen01State extends State<CurrOrderScreen01> {
+class _CurrOrderScreen01State extends State<CurrOrderScreen01>
+    with TickerProviderStateMixin {
   /// keys
   final GlobalKey<ScaffoldState> key = GlobalKey();
   final orderService = Order01Service();
@@ -34,15 +28,25 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01> {
   final MapController mapController = MapController();
   final PanelController panelController = PanelController();
 
+  /// Animation controller
+  late final _animatedMapController = AnimatedMapController(
+    vsync: this,
+    duration: const Duration(seconds: 1),
+    curve: Curves.easeIn,
+    cancelPreviousAnimations: true,
+  );
+
   /// This updates the camera
   void updateCamera() => orderService.addListener(() {
     final loc = orderService.value;
     if (loc == null) return;
     final List<LatLng> points = [loc.destination, loc.sanitarian!.latLng!];
     final bounds = LatLngBounds.fromPoints(points);
-    mapController.fitCamera(
-      CameraFit.bounds(bounds: bounds, padding: const EdgeInsets.all(80)),
+    final cameraFit = CameraFit.bounds(
+      bounds: bounds,
+      padding: context.paddingXXL,
     );
+    _animatedMapController.animatedFitCamera(cameraFit: cameraFit);
   });
 
   @override
@@ -78,7 +82,7 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01> {
 
             /// The map
             body: CurrOrderMap01(
-              mapController: mapController,
+              mapController: _animatedMapController.mapController,
               onMapReady: updateCamera,
               order: order,
             ),
@@ -88,7 +92,6 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01> {
             borderRadius: BorderRadius.vertical(top: context.radiusLG.topLeft),
             color: context.colorScheme.surface,
             panelBuilder: (ScrollController controller) {
-
               /// If there is not sanitarian
               /// Remember to put return statement in this
               if (order.status == Order01Status.assigned &&

@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:scrapper/Services/AppUserServices/AppUserServices01.dart';
 import 'package:scrapper/theme/theme_extensions.dart';

@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:duration/duration.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../Models/Orders/Order01.dart';
@@ -35,7 +34,7 @@ class AcceptedBottomSheet01 extends StatelessWidget {
           "${order.sanitarian!.displayName} is has accepted your order",
         ),
         subtitle: Text(
-          "Reaching your destination in ${order.routesRes.duration.pretty()}",
+          "Reaching your destination in ${order.routesRes.duration.pretty(maxUnits: 2)}",
         ),
       ),
       Divider(),

@@ -39,8 +39,8 @@ class CurrOrderMap01 extends StatelessWidget {
           polylines: [
             Polyline(
               points: order.routesRes.coordinates,
-              strokeWidth: 4,
-              color: context.colorScheme.surface,
+              strokeWidth: 6,
+              color: Colors.black,
             ),
           ],
         ),
@@ -60,9 +60,9 @@ class CurrOrderMap01 extends StatelessWidget {
             Marker(
               point: order.sanitarian!.latLng!,
               child: Icon(
-                CupertinoIcons.car_detailed,
+                CupertinoIcons.car,
                 size: 40,
-                color: context.colorScheme.surface,
+                color: Colors.black,
               ),
             ),
         ],
