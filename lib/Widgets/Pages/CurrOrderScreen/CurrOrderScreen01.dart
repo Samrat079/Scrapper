@@ -23,34 +23,41 @@ class CurrOrderScreen01 extends StatefulWidget {
 }
 
 class _CurrOrderScreen01State extends State<CurrOrderScreen01> {
+  /// keys
+  final GlobalKey<ScaffoldState> key = GlobalKey();
+  final orderService = Order01Service();
+
+  /// Controller
+  final MapController mapController = MapController();
+  final PanelController panelController = PanelController();
+
+  /// This updates the camera
+  void updateCamera() => orderService.addListener(() {
+    final loc = orderService.value;
+    if (loc == null) return;
+    final List<LatLng> points = [loc.destination, loc.sanitarian!.latLng!];
+    final bounds = LatLngBounds.fromPoints(points);
+    mapController.fitCamera(
+      CameraFit.bounds(bounds: bounds, padding: const EdgeInsets.all(80)),
+    );
+  });
+
+  void updateCam(Order01 order) {
+    if (order.sanitarian?.latLng == null) return;
+    final List<LatLng> points = [order.destination, order.sanitarian!.latLng!];
+
+    final bounds = LatLngBounds.fromPoints(points);
+
+    mapController.fitCamera(
+      CameraFit.bounds(bounds: bounds, padding: const EdgeInsets.all(80)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     /// Map urls
     final mapUrl = "https://mt.google.com/vt/lyrs=m&x={x}&y={y}&z={z}";
     final packageId = "com.example.scrapper";
-
-    /// keys
-    final GlobalKey<ScaffoldState> key = GlobalKey();
-    final orderService = Order01Service();
-
-    /// Controller
-    final MapController mapController = MapController();
-    final PanelController panelController = PanelController();
-
-    /// This updates the camera
-    void updateCam(Order01 order) {
-      if (order.sanitarian?.latLng == null) return;
-      final List<LatLng> points = [
-        order.destination,
-        order.sanitarian!.latLng!,
-      ];
-
-      final bounds = LatLngBounds.fromPoints(points);
-
-      mapController.fitCamera(
-        CameraFit.bounds(bounds: bounds, padding: const EdgeInsets.all(80)),
-      );
-    }
 
     return ValueListenableBuilder<Order01?>(
       valueListenable: orderService,
@@ -58,8 +65,6 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01> {
         if (order == null) {
           return Center(child: CircularProgressIndicator());
         }
-
-        WidgetsBinding.instance.addPostFrameCallback((_) => updateCam(order));
 
         return Scaffold(
           key: key,
@@ -82,6 +87,8 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01> {
             body: FlutterMap(
               mapController: mapController,
               options: MapOptions(
+                onMapReady: () => updateCam(order),
+                // onMapReady: () => updateCamera(),
                 initialCenter: order.destination,
                 initialZoom: 18,
               ),
@@ -133,7 +140,6 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01> {
               /// If there is not sanitarian
               /// Remember to put return statement in this
               if (order.sanitarian == null) {
-                panelController.open();
                 return CenterColumn04(
                   padding: context.paddingLG,
                   scrollController: controller,
@@ -171,7 +177,6 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01> {
 
               /// If a sanitarian accepts the order
               /// this has return so wont crash
-              panelController.open();
               return CenterColumn04(
                 scrollController: controller,
                 children: [
