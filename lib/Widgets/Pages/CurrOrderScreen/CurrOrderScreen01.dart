@@ -60,23 +60,20 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01>
 
         return Scaffold(
           key: key,
-          extendBodyBehindAppBar: true,
           drawer: Drawer01(),
 
           /// The appbar as if a floating button
           /// opens the drawer but needs a scaffold key
-          appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            surfaceTintColor: Colors.transparent,
-            leading: IconButton.filled(
-              onPressed: () => key.currentState!.openDrawer(),
-              icon: const Icon(Icons.menu_outlined),
-              style: IconButton.styleFrom(
-                backgroundColor: context.colorScheme.surface,
-              ),
-            ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () => key.currentState!.openDrawer(),
+            backgroundColor: context.colorScheme.surface,
+            foregroundColor: context.colorScheme.onSurface,
+            child: Icon(Icons.menu_rounded),
           ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.miniStartTop,
 
+          /// body
           body: SlidingUpPanel(
             controller: panelController,
 
@@ -89,7 +86,8 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01>
 
             parallaxEnabled: true,
             parallaxOffset: 0.3,
-            borderRadius: BorderRadius.vertical(top: context.radiusLG.topLeft),
+            backdropTapClosesPanel: true,
+            borderRadius: BorderRadius.vertical(top: context.radiusXL.bottomRight),
             color: context.colorScheme.surface,
             panelBuilder: (ScrollController controller) {
               /// If there is not sanitarian
