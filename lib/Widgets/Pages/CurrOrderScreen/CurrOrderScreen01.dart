@@ -9,6 +9,9 @@ import 'package:scrapper/Models/Orders/Order01.dart';
 import 'package:scrapper/Services/OrderServices/Order01Service.dart';
 import 'package:scrapper/Widgets/Custome/CardList01/CardList01.dart';
 import 'package:scrapper/Widgets/Custome/Drawers/Drawer01.dart';
+import 'package:scrapper/Widgets/Pages/CurrOrderScreen/Widget/AcceptedBottomSheet01.dart';
+import 'package:scrapper/Widgets/Pages/CurrOrderScreen/Widget/CurrOrderMap01.dart';
+import 'package:scrapper/Widgets/Pages/CurrOrderScreen/Widget/SearchingBottomSheet01.dart';
 import 'package:scrapper/Widgets/Pages/HomeScreen/HomeScreen01.dart';
 import 'package:scrapper/theme/theme_extensions.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -42,23 +45,8 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01> {
     );
   });
 
-  void updateCam(Order01 order) {
-    if (order.sanitarian?.latLng == null) return;
-    final List<LatLng> points = [order.destination, order.sanitarian!.latLng!];
-
-    final bounds = LatLngBounds.fromPoints(points);
-
-    mapController.fitCamera(
-      CameraFit.bounds(bounds: bounds, padding: const EdgeInsets.all(80)),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    /// Map urls
-    final mapUrl = "https://mt.google.com/vt/lyrs=m&x={x}&y={y}&z={z}";
-    final packageId = "com.example.scrapper";
-
     return ValueListenableBuilder<Order01?>(
       valueListenable: orderService,
       builder: (context, order, _) {
@@ -70,6 +58,9 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01> {
           key: key,
           extendBodyBehindAppBar: true,
           drawer: Drawer01(),
+
+          /// The appbar as if a floating button
+          /// opens the drawer but needs a scaffold key
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             surfaceTintColor: Colors.transparent,
@@ -84,52 +75,12 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01> {
 
           body: SlidingUpPanel(
             controller: panelController,
-            body: FlutterMap(
+
+            /// The map
+            body: CurrOrderMap01(
               mapController: mapController,
-              options: MapOptions(
-                onMapReady: () => updateCam(order),
-                // onMapReady: () => updateCamera(),
-                initialCenter: order.destination,
-                initialZoom: 18,
-              ),
-              children: [
-                TileLayer(urlTemplate: mapUrl, userAgentPackageName: packageId),
-
-                /// Remember to put the not empty check
-                /// else it will error out
-                if (order.routesRes.coordinates.isNotEmpty)
-                  PolylineLayer(
-                    polylines: [
-                      Polyline(
-                        points: order.routesRes.coordinates,
-                        strokeWidth: 4,
-                        color: context.colorScheme.surface,
-                      ),
-                    ],
-                  ),
-
-                MarkerLayer(
-                  markers: [
-                    Marker(
-                      point: order.destination,
-                      child: const Icon(
-                        Icons.location_pin,
-                        size: 40,
-                        color: Colors.red,
-                      ),
-                    ),
-                    if (order.sanitarian != null)
-                      Marker(
-                        point: order.sanitarian!.latLng!,
-                        child: Icon(
-                          CupertinoIcons.car_detailed,
-                          size: 40,
-                          color: context.colorScheme.primary,
-                        ),
-                      ),
-                  ],
-                ),
-              ],
+              onMapReady: updateCamera,
+              order: order,
             ),
 
             parallaxEnabled: true,
@@ -137,95 +88,22 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01> {
             borderRadius: BorderRadius.vertical(top: context.radiusLG.topLeft),
             color: context.colorScheme.surface,
             panelBuilder: (ScrollController controller) {
+
               /// If there is not sanitarian
               /// Remember to put return statement in this
-              if (order.sanitarian == null) {
-                return CenterColumn04(
-                  padding: context.paddingLG,
-                  scrollController: controller,
-                  children: [
-                    Image.asset('assets/Search/search_01.png', height: 200),
-                    context.gapMD,
-                    const Center(child: LinearProgressIndicator()),
-                    context.gapMD,
-                    const Text(
-                      'Looking for sanitarians in your area',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    CardList01(
-                      children: [
-                        ListTile(
-                          leading: const Icon(Icons.location_pin),
-                          title: Text(order.address.place.name!),
-                          subtitle: Text(order.address.place.displayName!),
-                        ),
-                      ],
-                    ),
-                    context.gapMD,
-                    ElevatedButton(
-                      onPressed: () => Order01Service().cancelCurrOrder(),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: context.colorScheme.errorContainer,
-                        foregroundColor: context.colorScheme.onErrorContainer,
-                      ),
-                      child: const Text('Cancel'),
-                    ),
-                  ],
+              if (order.status == Order01Status.assigned &&
+                  order.sanitarian == null) {
+                return SearchingBottomSheet01(
+                  controller: controller,
+                  order: order,
                 );
               }
 
               /// If a sanitarian accepts the order
               /// this has return so wont crash
-              return CenterColumn04(
-                scrollController: controller,
-                children: [
-                  /// Sanitarian info
-                  ListTile(
-                    leading: CachedNetworkImage(
-                      imageUrl: order.sanitarian!.photoUrl,
-                      imageBuilder: (context, provider) =>
-                          CircleAvatar(backgroundImage: provider),
-                      placeholder: (context, url) => Icon(Icons.person_outline),
-                      errorWidget: (context, url, error) =>
-                          Icon(Icons.error_outline),
-                    ),
-                    title: Text(
-                      "${order.sanitarian!.displayName} is has accepted your order",
-                    ),
-                    subtitle: Text(
-                      "Reaching your destination in ${order.routesRes.duration.pretty()}",
-                    ),
-                  ),
-                  Divider(),
-
-                  /// Order details
-                  ListTile(
-                    leading: const Icon(Icons.house_outlined),
-                    title: Text(order.address.place.name!),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          order.address.place.displayName!,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
-                        ),
-                        Text(order.address.phoneNumber),
-                      ],
-                    ),
-                  ),
-                  context.gapMD,
-
-                  ElevatedButton(
-                    onPressed: () => Order01Service().cancelCurrOrder(),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: context.colorScheme.errorContainer,
-                      foregroundColor: context.colorScheme.onErrorContainer,
-                    ),
-                    child: const Text('Cancel'),
-                  ),
-                ],
+              return AcceptedBottomSheet01(
+                controller: controller,
+                order: order,
               );
             },
           ),
