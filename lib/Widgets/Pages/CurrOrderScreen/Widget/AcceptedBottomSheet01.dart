@@ -34,7 +34,7 @@ class AcceptedBottomSheet01 extends StatelessWidget {
           "${order.sanitarian!.displayName} is has accepted your order",
         ),
         subtitle: Text(
-          "Reaching your destination in ${order.routesRes.duration.pretty(maxUnits: 2)}",
+          "Reaching your destination in ${order.routesRes.duration.pretty(maxUnits: 2, tersity: DurationTersity.minute)}",
         ),
       ),
       Divider(),

@@ -87,7 +87,9 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01>
             parallaxEnabled: true,
             parallaxOffset: 0.3,
             backdropTapClosesPanel: true,
-            borderRadius: BorderRadius.vertical(top: context.radiusXL.bottomRight),
+            borderRadius: BorderRadius.vertical(
+              top: context.radiusXL.bottomRight,
+            ),
             color: context.colorScheme.surface,
             panelBuilder: (ScrollController controller) {
               /// If there is not sanitarian
