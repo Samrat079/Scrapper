@@ -12,7 +12,9 @@ class Order01Service extends ValueNotifier<Order01?> {
   /// Needs singleton as only one curr order
   /// can exist on one application
   static final Order01Service _instance = Order01Service._internal();
+
   Order01Service._internal() : super(null);
+
   factory Order01Service() => _instance;
 
   /// Random
@@ -82,6 +84,11 @@ class Order01Service extends ValueNotifier<Order01?> {
 
     await doc.set(order);
     value = order;
+  }
+
+  Future<void> updatePrice(double price) async {
+    await _ref.doc(value?.uid).update({"price": price});
+    value?.price = price;
   }
 
   Future<void> cancelCurrOrder() async {

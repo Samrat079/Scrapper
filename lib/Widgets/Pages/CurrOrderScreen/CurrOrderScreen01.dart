@@ -87,6 +87,7 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01>
             parallaxEnabled: true,
             parallaxOffset: 0.3,
             backdropTapClosesPanel: true,
+            defaultPanelState: PanelState.OPEN,
             borderRadius: BorderRadius.vertical(
               top: context.radiusXL.bottomRight,
             ),
@@ -99,6 +100,9 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01>
                 return SearchingBottomSheet01(
                   controller: controller,
                   order: order,
+                  onIncrement: () => orderService.updatePrice(order.price += 10),
+                  onDecrement: () => orderService.updatePrice(order.price -= 10),
+                  onCancel: () => orderService.cancelCurrOrder(),
                 );
               }
 
