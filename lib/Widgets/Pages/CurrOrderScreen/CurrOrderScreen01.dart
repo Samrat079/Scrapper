@@ -39,7 +39,7 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01>
   /// This updates the camera
   void updateCamera() => orderService.addListener(() {
     final loc = orderService.value;
-    if (loc == null) return;
+    if (loc == null || loc.sanitarian == null) return;
     final List<LatLng> points = [loc.destination, loc.sanitarian!.latLng!];
     final bounds = LatLngBounds.fromPoints(points);
     final cameraFit = CameraFit.bounds(
@@ -94,7 +94,7 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01>
             panelBuilder: (ScrollController controller) {
               /// If there is not sanitarian
               /// Remember to put return statement in this
-              if (order.status == Order01Status.assigned &&
+              if (order.status == Order01Status.requested &&
                   order.sanitarian == null) {
                 return SearchingBottomSheet01(
                   controller: controller,

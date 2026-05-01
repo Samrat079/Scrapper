@@ -13,9 +13,18 @@ class HomeScreen01 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void placeOrder() async {
-      final address = await Navigator.pushNamed(context, '/location01');
-      if (address == null || address is! Address02) return;
-      Order01Service().placeOrder(23, address);
+      final result = await Navigator.pushNamed(context, '/location01');
+      if (result == null || result is! Map<String, dynamic>) return;
+      final place = result['place'];
+      final houseNo = result['houseNo'];
+      final phoneNumber = result['phoneNumber'];
+      final price = result['price'];
+      final address = Address02(
+        place: place,
+        houseNo: houseNo,
+        phoneNumber: phoneNumber,
+      );
+      Order01Service().placeOrder(price, address);
     }
 
     return Scaffold(

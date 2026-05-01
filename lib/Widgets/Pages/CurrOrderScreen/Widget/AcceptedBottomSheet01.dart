@@ -18,53 +18,55 @@ class AcceptedBottomSheet01 extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => CenterColumn04(
-    scrollController: controller,
-    children: [
-      /// Sanitarian info
-      ListTile(
-        leading: CachedNetworkImage(
-          imageUrl: order.sanitarian!.photoUrl,
-          imageBuilder: (context, provider) =>
-              CircleAvatar(backgroundImage: provider),
-          placeholder: (context, url) => Icon(Icons.person_outline),
-          errorWidget: (context, url, error) => Icon(Icons.error_outline),
+  Widget build(BuildContext context) => SafeArea(
+    child: CenterColumn04(
+      scrollController: controller,
+      children: [
+        /// Sanitarian info
+        ListTile(
+          leading: CachedNetworkImage(
+            imageUrl: order.sanitarian!.photoUrl,
+            imageBuilder: (context, provider) =>
+                CircleAvatar(backgroundImage: provider),
+            placeholder: (context, url) => Icon(Icons.person_outline),
+            errorWidget: (context, url, error) => Icon(Icons.error_outline),
+          ),
+          title: Text(
+            "${order.sanitarian!.displayName} is has accepted your order",
+          ),
+          subtitle: Text(
+            "Reaching your destination in ${order.routesRes.duration.pretty(maxUnits: 2, tersity: DurationTersity.minute)}",
+          ),
         ),
-        title: Text(
-          "${order.sanitarian!.displayName} is has accepted your order",
+        Divider(),
+    
+        /// Order details
+        ListTile(
+          leading: const Icon(Icons.house_outlined),
+          title: Text(order.address.place.name!),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                order.address.place.displayName!,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+              ),
+              Text(order.address.phoneNumber),
+            ],
+          ),
         ),
-        subtitle: Text(
-          "Reaching your destination in ${order.routesRes.duration.pretty(maxUnits: 2, tersity: DurationTersity.minute)}",
+        context.gapMD,
+    
+        ElevatedButton(
+          onPressed: () => Order01Service().cancelCurrOrder(),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: context.colorScheme.error,
+            foregroundColor: context.colorScheme.onError,
+          ),
+          child: const Text('Cancel'),
         ),
-      ),
-      Divider(),
-
-      /// Order details
-      ListTile(
-        leading: const Icon(Icons.house_outlined),
-        title: Text(order.address.place.name!),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              order.address.place.displayName!,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 2,
-            ),
-            Text(order.address.phoneNumber),
-          ],
-        ),
-      ),
-      context.gapMD,
-
-      ElevatedButton(
-        onPressed: () => Order01Service().cancelCurrOrder(),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: context.colorScheme.errorContainer,
-          foregroundColor: context.colorScheme.onErrorContainer,
-        ),
-        child: const Text('Cancel'),
-      ),
-    ],
+      ],
+    ),
   );
 }

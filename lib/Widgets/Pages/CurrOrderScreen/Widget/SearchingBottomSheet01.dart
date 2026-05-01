@@ -17,37 +17,39 @@ class SearchingBottomSheet01 extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => CenterColumn04(
-    padding: context.paddingLG,
-    scrollController: controller,
-    children: [
-      Image.asset('assets/Search/search_01.png', height: 200),
-      context.gapMD,
-      const Center(child: LinearProgressIndicator()),
-      context.gapMD,
-      const Text(
-        'Looking for sanitarians in your area',
-        textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 20),
-      ),
-      CardList01(
-        children: [
-          ListTile(
-            leading: const Icon(Icons.location_pin),
-            title: Text(order.address.place.name!),
-            subtitle: Text(order.address.place.displayName!),
-          ),
-        ],
-      ),
-      context.gapMD,
-      ElevatedButton(
-        onPressed: () => Order01Service().cancelCurrOrder(),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: context.colorScheme.errorContainer,
-          foregroundColor: context.colorScheme.onErrorContainer,
+  Widget build(BuildContext context) => SafeArea(
+    child: CenterColumn04(
+      padding: context.paddingLG,
+      scrollController: controller,
+      children: [
+        Image.asset('assets/Search/search_01.png', height: 200),
+        context.gapMD,
+        const Center(child: LinearProgressIndicator()),
+        context.gapMD,
+        const Text(
+          'Looking for sanitarians in your area',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 20),
         ),
-        child: const Text('Cancel'),
-      ),
-    ],
+        CardList01(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.location_pin),
+              title: Text(order.address.place.name!),
+              subtitle: Text(order.address.place.displayName!),
+            ),
+          ],
+        ),
+        context.gapMD,
+        ElevatedButton(
+          onPressed: () => Order01Service().cancelCurrOrder(),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: context.colorScheme.error,
+            foregroundColor: context.colorScheme.onError,
+          ),
+          child: const Text('Cancel'),
+        ),
+      ],
+    ),
   );
 }

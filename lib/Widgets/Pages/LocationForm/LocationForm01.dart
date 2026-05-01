@@ -54,17 +54,16 @@ class _LocationForm01State extends State<LocationForm01>
 
   void submitHandler() {
     if (_formKey.currentState?.saveAndValidate() ?? false) {
-      final houseNo = _formKey.currentState?.fields['houseNo']?.value;
-      final phoneNumber = _formKey.currentState!.fields['phoneNumber']?.value;
+      final houseNo = _formKey.currentState?.fields['houseNo']?.value as String;
+      final phoneNumber =
+          _formKey.currentState!.fields['phoneNumber']?.value as String;
 
-      Navigator.pop(
-        context,
-        Address02(
-          place: _selectedPlace!,
-          houseNo: houseNo,
-          phoneNumber: phoneNumber,
-        ),
-      );
+      Navigator.pop(context, {
+        "place": _selectedPlace!,
+        "houseNo": houseNo,
+        "phoneNumber": phoneNumber,
+        "price": cost,
+      });
     }
   }
 
@@ -84,7 +83,7 @@ class _LocationForm01State extends State<LocationForm01>
           onPressed: () => Navigator.pop(context),
           icon: Icon(Icons.arrow_back),
           style: IconButton.styleFrom(
-            backgroundColor: Theme.of(context).colorScheme.surface,
+            backgroundColor: context.colorScheme.surface,
           ),
         ),
       ),
