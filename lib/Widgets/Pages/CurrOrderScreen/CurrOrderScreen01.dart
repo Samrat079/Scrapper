@@ -111,6 +111,7 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01>
               return AcceptedBottomSheet01(
                 controller: controller,
                 order: order,
+                onCancel: () => orderService.cancelCurrOrder(),
               );
             },
           ),

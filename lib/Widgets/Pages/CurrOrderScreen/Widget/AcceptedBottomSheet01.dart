@@ -12,11 +12,12 @@ import '../../../Custome/CenterColumn/CenterColumn04.dart';
 class AcceptedBottomSheet01 extends StatelessWidget {
   final ScrollController controller;
   final Order01 order;
+  final VoidCallback onCancel;
 
   const AcceptedBottomSheet01({
     super.key,
     required this.controller,
-    required this.order,
+    required this.order, required this.onCancel,
   });
 
   @override
@@ -84,7 +85,7 @@ class AcceptedBottomSheet01 extends StatelessWidget {
         context.gapMD,
 
         ElevatedButton(
-          onPressed: () => Order01Service().cancelCurrOrder(),
+          onPressed: onCancel,
           style: ElevatedButton.styleFrom(
             backgroundColor: context.colorScheme.error,
             foregroundColor: context.colorScheme.onError,
