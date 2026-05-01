@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:duration/duration.dart';
 import 'package:flutter/material.dart';
+import 'package:scrapper/Widgets/Custome/CardList01/CardList01.dart';
 
 import '../../../../Models/Orders/Order01.dart';
 import '../../../../Services/OrderServices/Order01Service.dart';
@@ -39,7 +41,30 @@ class AcceptedBottomSheet01 extends StatelessWidget {
           ),
         ),
         Divider(),
-    
+        context.gapMD,
+
+        /// Otp
+        ListTile(
+          visualDensity: VisualDensity(vertical: 2),
+          leading: Icon(Icons.lock),
+          title: Text("Otp"),
+          subtitle: Text(
+            "Share this otp with your sanitarian at your door step.",
+          ),
+          trailing: Card(
+            color: context.colorScheme.primaryContainer,
+            child: Padding(
+              padding: context.paddingMD,
+              child: Text(
+                order.otp.toString(),
+                style: TextStyle(color: context.colorScheme.onPrimary),
+              ),
+            ),
+          ),
+        ),
+        Divider(),
+        context.gapMD,
+
         /// Order details
         ListTile(
           leading: const Icon(Icons.house_outlined),
@@ -57,7 +82,7 @@ class AcceptedBottomSheet01 extends StatelessWidget {
           ),
         ),
         context.gapMD,
-    
+
         ElevatedButton(
           onPressed: () => Order01Service().cancelCurrOrder(),
           style: ElevatedButton.styleFrom(
