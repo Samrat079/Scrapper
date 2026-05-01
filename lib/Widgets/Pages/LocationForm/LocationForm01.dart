@@ -8,6 +8,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:nominatim_flutter/model/response/nominatim_response.dart';
 import 'package:scrapper/Models/Address/Address02.dart';
 import 'package:scrapper/Services/AppUserServices/AppUserServices01.dart';
+import 'package:scrapper/Services/PriceServices/PriceService01.dart';
 import 'package:scrapper/Widgets/Custome/SearchDelegate/encodingDelegate01.dart';
 import 'package:scrapper/theme/theme_extensions.dart';
 
@@ -25,6 +26,7 @@ class _LocationForm01State extends State<LocationForm01>
   late final AnimatedMapController _animatedMapController;
   final LatLng _defaultLocation = const LatLng(22.572645, 88.363892);
   final _formKey = GlobalKey<FormBuilderState>();
+  double cost = 0;
   LatLng? _selectedLocation;
   NominatimResponse? _selectedPlace;
 
@@ -40,11 +42,13 @@ class _LocationForm01State extends State<LocationForm01>
     final lon = double.tryParse(res.lon ?? '');
     if (lat == null || lon == null) return;
     final newLocation = LatLng(lat, lon);
+    final newCost = PriceService01().basePrice();
     _animatedMapController.animateTo(dest: newLocation, zoom: 18);
     _formKey.currentState?.fields['place']?.didChange(res.displayName);
     setState(() {
       _selectedLocation = newLocation;
       _selectedPlace = res;
+      cost = newCost;
     });
   }
 
@@ -116,6 +120,14 @@ class _LocationForm01State extends State<LocationForm01>
           key: _formKey,
           child: CenterColumn04(
             children: [
+              /// Price
+              if (cost > 0)
+                Text(
+                  "Rs.${cost.toStringAsFixed(2)}",
+                  style: TextStyle(fontSize: 32),
+                ),
+              context.gapMD,
+
               /// location
               FormBuilderTextField(
                 name: 'place',
