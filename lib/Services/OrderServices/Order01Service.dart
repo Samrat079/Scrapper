@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -11,12 +12,11 @@ class Order01Service extends ValueNotifier<Order01?> {
   /// Needs singleton as only one curr order
   /// can exist on one application
   static final Order01Service _instance = Order01Service._internal();
-
   Order01Service._internal() : super(null);
-
   factory Order01Service() => _instance;
 
-  /// For loading state
+  /// Random
+  var rand = Random();
 
   StreamSubscription<QuerySnapshot<Order01>>? _orderSub;
 
@@ -77,6 +77,7 @@ class Order01Service extends ValueNotifier<Order01?> {
       address: address,
       customer: customer,
       createdAt: Timestamp.now(),
+      otp: rand.nextInt(900000) + 100000,
     );
 
     await doc.set(order);

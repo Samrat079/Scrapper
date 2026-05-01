@@ -15,6 +15,7 @@ class Order01 {
   Order01Status status;
   Timestamp createdAt;
   RoutesResponse routesRes;
+  int otp;
 
   Order01({
     this.uid,
@@ -24,6 +25,7 @@ class Order01 {
     this.sanitarian,
     this.status = Order01Status.requested,
     required this.createdAt,
+    this.otp = 000000,
 
     RoutesResponse? routesRes,
   }) : routesRes = routesRes ?? RoutesResponse();
@@ -40,6 +42,8 @@ class Order01 {
       price: (data['price'] ?? 0).toDouble(),
       address: Address02.fromJson(data['address']),
       customer: Customer01.fromJson(data['customer']),
+      createdAt: data['createdAt'] ?? Timestamp.now(),
+      otp: data['otp'] ?? 000000,
       status: Order01Status.values.firstWhere(
         (e) => e.name == data['status'],
         orElse: () => Order01Status.requested,
@@ -47,7 +51,6 @@ class Order01 {
       sanitarian: san is Map<String, dynamic>
           ? Sanitarian01.fromJson(san)
           : null,
-      createdAt: data['createdAt'] ?? Timestamp.now(),
     );
   }
 
@@ -58,6 +61,7 @@ class Order01 {
     'createdAt': createdAt,
     'status': status.name,
     'sanitarian': sanitarian?.toJson(),
+    'otp': otp,
   };
 
   /// Simple getter for flatland for the destination
