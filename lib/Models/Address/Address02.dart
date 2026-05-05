@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:nominatim_flutter/model/response/nominatim_response.dart';
 
-import 'NominatimResponse02.dart';
+import '../NominatimResponse/NominatimResponse02.dart';
 
 class Address02 {
   final String? id;

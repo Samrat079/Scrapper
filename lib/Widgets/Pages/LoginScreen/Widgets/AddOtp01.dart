@@ -8,114 +8,141 @@ import 'package:scrapper/theme/theme_extensions.dart';
 import '../../../Custome/CenterColumn/CenterColumn04.dart';
 
 class AddOtp01 extends StatefulWidget {
-  final PageController _controller;
+  final PageController controller;
 
-  const AddOtp01({super.key, required PageController controller})
-    : _controller = controller;
+  const AddOtp01({super.key, required this.controller});
 
   @override
   State<AddOtp01> createState() => _AddOtp01State();
 }
 
 class _AddOtp01State extends State<AddOtp01> {
-  final _otpController = GlobalKey<FormBuilderState>();
+  final PinInputController otpController = PinInputController();
 
-  void clear() => _otpController.currentState!.reset();
   bool isLoading = false;
+  String? errorText;
 
-  void submitHandler() async {
-    setState(() => isLoading = true);
-    if (_otpController.currentState?.saveAndValidate() ?? false) {
-      final otp = _otpController.currentState?.fields['Otp']?.value;
-      AppUserServices01()
-          .verifyOtp(otp)
-          .then(
-            (e) => widget._controller.nextPage(
-              duration: Duration(milliseconds: 500),
-              curve: Curves.easeIn,
-            ),
-          )
-          .onError<FirebaseAuthException>((e, stackTrace) {
-            _otpController.currentState?.fields['Otp']?.invalidate(
-              e.message.toString(),
-            );
-            setState(() => isLoading = false);
-            return;
-          });
+  void clear() {
+    otpController.clear();
+    setState(() => errorText = null);
+  }
+
+  Future<void> submitHandler(String otp) async {
+    setState(() {
+      isLoading = true;
+      errorText = null;
+    });
+
+    /// Same validation logic as before
+    if (otp.length != 6) {
+      setError("Please enter a valid 6-digit OTP");
+      return;
     }
+
+    try {
+      await AppUserServices01().verifyOtp(otp);
+
+      widget.controller.nextPage(
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeIn,
+      );
+    } on FirebaseAuthException catch (e) {
+      setError(e.message ?? "Verification failed");
+    } catch (_) {
+      setError("Something went wrong");
+    } finally {
+      if (mounted) {
+        setState(() => isLoading = false);
+      }
+    }
+  }
+
+  void setError(String message) {
+    otpController.triggerError();
+    setState(() => errorText = message);
+  }
+
+  @override
+  void dispose() {
+    otpController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FormBuilder(
-      key: _otpController,
-      child: CenterColumn04(
-        centerVertically: true,
-        padding: context.paddingXL,
-        children: [
-          Image.asset('assets/Illustrations/otp01.png', height: 256),
-          context.gapMD,
-          Text(
-            'Please add otp',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
+    return CenterColumn04(
+      centerVertically: true,
+      padding: context.paddingXL,
+      children: [
+        Image.asset('assets/Illustrations/otp01.png', height: 256),
 
-          context.gapXL,
+        context.gapMD,
 
-          FormBuilderField(
-            name: 'Otp',
-            builder: (field) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  MaterialPinField(
-                    key: ValueKey(field.errorText),
-                    length: 6,
-                    onChanged: (otp) => field.didChange(otp),
-                    theme: MaterialPinTheme(cellSize: Size(40, 46)),
-                  ),
+        const Text(
+          'Please add otp',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
 
-                  context.gapSM,
-                  Text(
-                    field.errorText ?? '',
-                    style: TextStyle(
-                      fontStyle: FontStyle.italic,
-                      color: Theme.of(context).colorScheme.error,
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
+        context.gapXL,
 
-          context.gapMD,
-
-          if (isLoading)
-            Column(
-              children: [
-                LinearProgressIndicator(),
-                context.gapSM,
-                Text('Please wait', textAlign: TextAlign.center),
-                context.gapMD,
-              ],
+        /// 🔑 PIN FIELD (replaces FormBuilderField)
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            MaterialPinField(
+              length: 6,
+              pinController: otpController,
+              onChanged: (_) {
+                if (errorText != null) {
+                  setState(() => errorText = null);
+                }
+              },
+              onCompleted: submitHandler,
+              theme: const MaterialPinTheme(cellSize: Size(40, 46)),
             ),
 
-          ElevatedButton(
-            onPressed: isLoading ? null : submitHandler,
-            child: Text('Submit'),
+            context.gapSM,
+
+            if (errorText != null)
+              Text(
+                errorText!,
+                style: TextStyle(
+                  fontStyle: FontStyle.italic,
+                  color: Theme.of(context).colorScheme.error,
+                ),
+              ),
+          ],
+        ),
+
+        context.gapMD,
+
+        if (isLoading)
+          Column(
+            children: [
+              const LinearProgressIndicator(),
+              context.gapSM,
+              const Text('Please wait', textAlign: TextAlign.center),
+              context.gapMD,
+            ],
           ),
-          context.gapMD,
-          ElevatedButton(
-            onPressed: clear,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: context.colorScheme.surfaceContainerHigh,
-              foregroundColor: context.colorScheme.onSurface,
-            ),
-            child: Text('Clear'),
+
+        ElevatedButton(
+          onPressed: isLoading ? null : () => submitHandler(otpController.text),
+          child: const Text('Submit'),
+        ),
+
+        context.gapMD,
+
+        ElevatedButton(
+          onPressed: clear,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: context.colorScheme.surfaceContainerHigh,
+            foregroundColor: context.colorScheme.onSurface,
           ),
-        ],
-      ),
+          child: const Text('Clear'),
+        ),
+      ],
     );
   }
 }

@@ -10,6 +10,8 @@ class CenterColumn04 extends StatelessWidget {
 
   /// Behavior
   final bool centerVertically;
+  final bool centerHorizontally;
+
   final ScrollPhysics? physics;
   final ScrollController? scrollController;
 
@@ -21,9 +23,13 @@ class CenterColumn04 extends StatelessWidget {
     this.padding = const EdgeInsets.all(16),
 
     this.mainAxisAlignment = MainAxisAlignment.start,
+
+    /// Default stretch unless overridden
     this.crossAxisAlignment = CrossAxisAlignment.stretch,
 
     this.centerVertically = false,
+    this.centerHorizontally = false,
+
     this.physics,
     this.scrollController,
   });
@@ -33,11 +39,12 @@ class CenterColumn04 extends StatelessWidget {
     final column = Padding(
       padding: padding,
       child: Column(
-        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: centerVertically
             ? MainAxisAlignment.center
             : mainAxisAlignment,
-        crossAxisAlignment: crossAxisAlignment,
+        crossAxisAlignment: centerHorizontally
+            ? CrossAxisAlignment.center
+            : crossAxisAlignment,
         children: children,
       ),
     );

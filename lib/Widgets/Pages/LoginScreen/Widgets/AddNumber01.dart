@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_intl_phone_field/flutter_intl_phone_field.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:scrapper/Services/AppUserServices/AppUserServices01.dart';
 import 'package:scrapper/theme/theme_extensions.dart';
 
@@ -72,8 +73,10 @@ class _AddNumber01State extends State<AddNumber01> {
 
           FormBuilderField(
             name: 'Phone',
+            validator: FormBuilderValidators.phoneNumber(),
             builder: (field) {
               return IntlPhoneField(
+                onEditingComplete: submitHandler,
                 onChanged: (phone) => field.didChange(phone.completeNumber),
                 initialCountryCode: 'IN',
                 decoration: InputDecoration(
