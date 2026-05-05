@@ -5,11 +5,11 @@ import 'package:latlong2/latlong.dart';
 import '../../Models/RouteResponse/RouteResponse.dart';
 
 class OSRMService01 {
-  static final OSRMService01 _instance = OSRMService01._internal();
-
-  OSRMService01._internal();
-
-  factory OSRMService01() => _instance;
+  // static final OSRMService01 _instance = OSRMService01._internal();
+  //
+  // OSRMService01._internal();
+  //
+  // factory OSRMService01() => _instance;
 
   /// Base URLs
   final String _routeUrl = 'http://router.project-osrm.org/route/v1';
