@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scrapper/Services/AppUserServices/AppUserServices01.dart';
+import 'package:scrapper/Utils/Providers/Providers01.dart';
 import 'package:scrapper/Utils/Router/RouteGen.dart';
 import 'package:scrapper/firebase_options.dart';
 import 'package:scrapper/theme/app_theme.dart';
@@ -10,7 +11,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await AppUserServices01().init();
-  MultiProvider(providers: [],child: const MyApp(),);
+  runApp(MultiProvider(providers: providers01, child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

@@ -9,33 +9,30 @@ import 'package:scrapper/Services/OrderServices/Order01Service.dart';
 
 class AppUserServices01 extends ValueNotifier<AppUser01> {
   /// 🔒 Singleton
-  static final AppUserServices01 _instance =
-  AppUserServices01._internal();
+  static final AppUserServices01 _instance = AppUserServices01._internal();
 
-  AppUserServices01._internal() : super(AppUser01(auth: null, customer01: null));
+  AppUserServices01._internal()
+    : super(AppUser01(auth: null, customer01: null));
 
   factory AppUserServices01() => _instance;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  final CollectionReference<Customer01> _users =
-  FirebaseFirestore.instance
+  final CollectionReference<Customer01> _users = FirebaseFirestore.instance
       .collection('customers')
       .withConverter<Customer01>(
-    fromFirestore: Customer01.fromFirestore,
-    toFirestore: (Customer01 c, _) => c.toJson(),
-  );
+        fromFirestore: Customer01.fromFirestore,
+        toFirestore: (Customer01 c, _) => c.toJson(),
+      );
 
   String? _verificationId;
 
   User? _authUser;
   Customer01? _customer;
 
-  AppUser01 get current =>
-      AppUser01(auth: _authUser, customer01: _customer);
+  AppUser01 get current => AppUser01(auth: _authUser, customer01: _customer);
 
-  bool get isLoggedIn =>
-      _authUser != null && _customer != null;
+  bool get isLoggedIn => _authUser != null && _customer != null;
 
   bool get isReady => current.exists;
 
@@ -103,10 +100,7 @@ class AppUserServices01 extends ValueNotifier<AppUser01> {
     if (!doc.exists) {
       final newCustomer = Customer01.fromAuth(user);
 
-      await _users.doc(user.uid).set(
-        newCustomer,
-        SetOptions(merge: true),
-      );
+      await _users.doc(user.uid).set(newCustomer, SetOptions(merge: true));
 
       _customer = newCustomer;
     } else {
