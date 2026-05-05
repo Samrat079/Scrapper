@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
+import 'package:scrapper/Services/AppUserServices/AppUserService02.dart';
 import 'package:scrapper/Services/AppUserServices/AppUserServices01.dart';
 import 'package:scrapper/Widgets/Custome/CenterColumn/CenterColumn04.dart';
 import 'package:scrapper/Widgets/Custome/Forms/EditProfileForm01.dart';
@@ -15,24 +17,28 @@ class EditProfileView01 extends StatelessWidget {
   /// do the submit function
 
   @override
-  Widget build(BuildContext context) => CenterColumn04(
-    centerVertically: true,
-    padding: context.paddingLG,
-    children: [
-      Image.asset('assets/Illustrations/otp01.png', height: 256),
-      context.gapMD,
-      Text(
-        'Edit profile',
-        textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-      ),
-      context.gapXL,
-      EditProfileForm01(
-        onSubmit: (data) => AppUserServices01()
-            .updateAppUser(data['displayName'])
-            .then((_) => Navigator.pushReplacementNamed(context, '/profile')),
-        onCancel: () => Navigator.pop(context),
-      ),
-    ],
-  );
+  Widget build(BuildContext context) {
+    final appUserService = context.read<AppUserServices02>();
+    return CenterColumn04(
+      centerVertically: true,
+      padding: context.paddingLG,
+      children: [
+        Image.asset('assets/Illustrations/otp01.png', height: 256),
+        context.gapMD,
+        Text(
+          'Edit profile',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        context.gapXL,
+        EditProfileForm01(
+          appUserService: appUserService,
+          onSubmit: (data) => appUserService
+              .updateAppUser(data['displayName'])
+              .then((_) => Navigator.pushReplacementNamed(context, '/profile')),
+          onCancel: () => Navigator.pop(context),
+        ),
+      ],
+    );
+  }
 }

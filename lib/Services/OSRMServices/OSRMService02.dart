@@ -4,7 +4,7 @@ import 'package:latlong2/latlong.dart';
 
 import '../../Models/RouteResponse/RouteResponse.dart';
 
-class OSRMService01 {
+class OSRMService02 {
   // static final OSRMService01 _instance = OSRMService01._internal();
   //
   // OSRMService01._internal();

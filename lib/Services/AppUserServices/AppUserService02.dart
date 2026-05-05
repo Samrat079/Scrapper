@@ -2,23 +2,18 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
-import 'package:scrapper/Models/Customer/Customer01.dart';
-import 'package:scrapper/Models/AppUser/AppUser01.dart';
-import 'package:scrapper/Services/OrderServices/OrderService01.dart';
+import 'package:flutter/material.dart';
 
-class AppUserServices01 extends ValueNotifier<AppUser01> {
-  /// 🔒 Singleton
-  static final AppUserServices01 _instance = AppUserServices01._internal();
+import '../../Models/Customer/Customer01.dart';
+import '../../Models/AppUser/AppUser01.dart';
 
-  AppUserServices01._internal()
-    : super(AppUser01(auth: null, customer01: null));
+class AppUserServices02 extends ChangeNotifier {
+  final FirebaseAuth auth;
+  final FirebaseFirestore firestore;
 
-  factory AppUserServices01() => _instance;
+  AppUserServices02({required this.auth, required this.firestore});
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  final CollectionReference<Customer01> _users = FirebaseFirestore.instance
+  late final CollectionReference<Customer01> _users = firestore
       .collection('customers')
       .withConverter<Customer01>(
         fromFirestore: Customer01.fromFirestore,
@@ -30,33 +25,32 @@ class AppUserServices01 extends ValueNotifier<AppUser01> {
   User? _authUser;
   Customer01? _customer;
 
+  StreamSubscription<User?>? _authSub;
+
+  /// PUBLIC STATE
   AppUser01 get current => AppUser01(auth: _authUser, customer01: _customer);
 
   bool get isLoggedIn => _authUser != null && _customer != null;
 
   bool get isReady => current.exists;
 
-  /// init
+  /// INIT
   Future<void> init() async {
-    _auth.authStateChanges().listen((user) async {
+    _authSub?.cancel();
+
+    _authSub = auth.authStateChanges().listen((user) async {
       _authUser = user;
 
       if (user == null) {
         _customer = null;
-        value = current;
+        notifyListeners();
         return;
       }
 
       final doc = await _users.doc(user.uid).get();
-
       _customer = doc.exists ? doc.data() : null;
 
-      value = current;
-
-      /// listeners
-      if (isLoggedIn) {
-        OrderService01().init();
-      }
+      notifyListeners();
     });
   }
 
@@ -64,10 +58,10 @@ class AppUserServices01 extends ValueNotifier<AppUser01> {
   Future<void> sendOtp(String number) async {
     final completer = Completer<void>();
 
-    await _auth.verifyPhoneNumber(
+    await auth.verifyPhoneNumber(
       phoneNumber: number,
       verificationCompleted: (cred) async {
-        await _auth.signInWithCredential(cred);
+        await auth.signInWithCredential(cred);
         completer.complete();
       },
       verificationFailed: (e) => completer.completeError(e),
@@ -90,7 +84,7 @@ class AppUserServices01 extends ValueNotifier<AppUser01> {
       smsCode: otp,
     );
 
-    final result = await _auth.signInWithCredential(credential);
+    final result = await auth.signInWithCredential(credential);
     final user = result.user!;
 
     _authUser = user;
@@ -107,8 +101,7 @@ class AppUserServices01 extends ValueNotifier<AppUser01> {
       _customer = doc.data();
     }
 
-    value = current;
-    OrderService01().init();
+    notifyListeners();
     return current;
   }
 
@@ -118,30 +111,39 @@ class AppUserServices01 extends ValueNotifier<AppUser01> {
     return doc.data()!;
   }
 
+  /// ✏️ Update user
   Future<void> updateAppUser(String displayName) async {
     await _authUser?.updateDisplayName(displayName);
     await _authUser?.reload();
-    _authUser = _auth.currentUser;
+
+    _authUser = auth.currentUser;
+
     await _users.doc(current.uid).update({'displayName': displayName});
+
     _customer?.displayName = displayName;
-    value = current;
+
+    notifyListeners();
   }
 
   /// 🚪 Logout
   Future<void> logout() async {
-    await _auth.signOut();
+    await auth.signOut();
 
     _authUser = null;
     _customer = null;
 
-    value = current;
-
-    OrderService01().stop();
+    notifyListeners();
   }
 
   /// ❌ Delete user
   Future<void> delete() async {
     await _users.doc(_authUser?.uid).delete();
     await _authUser?.delete();
+  }
+
+  @override
+  void dispose() {
+    _authSub?.cancel();
+    super.dispose();
   }
 }

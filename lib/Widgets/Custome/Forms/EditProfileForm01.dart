@@ -5,11 +5,19 @@ import 'package:scrapper/Models/AppUser/AppUser01.dart';
 import 'package:scrapper/Services/AppUserServices/AppUserServices01.dart';
 import 'package:scrapper/theme/theme_extensions.dart';
 
+import '../../../Services/AppUserServices/AppUserService02.dart';
+
 class EditProfileForm01 extends StatefulWidget {
   final Function(Map<String, dynamic>) onSubmit;
   final Function() onCancel;
+  final AppUserServices02 appUserService;
 
-  const EditProfileForm01({super.key, required this.onSubmit, required this.onCancel});
+  const EditProfileForm01({
+    super.key,
+    required this.onSubmit,
+    required this.onCancel,
+    required this.appUserService,
+  });
 
   @override
   State<EditProfileForm01> createState() => _EditProfileForm01State();
@@ -18,7 +26,6 @@ class EditProfileForm01 extends StatefulWidget {
 class _EditProfileForm01State extends State<EditProfileForm01> {
   final _formKey = GlobalKey<FormBuilderState>();
   bool isLoading = false;
-  final AppUser01 currUser = AppUserServices01().current;
 
   void submitHandler() async {
     if (_formKey.currentState?.saveAndValidate() ?? false) {
@@ -32,6 +39,7 @@ class _EditProfileForm01State extends State<EditProfileForm01> {
 
   @override
   Widget build(BuildContext context) {
+    final appUser = widget.appUserService.current.customer01;
     return FormBuilder(
       key: _formKey,
       child: Column(
@@ -45,7 +53,7 @@ class _EditProfileForm01State extends State<EditProfileForm01> {
             name: 'displayName',
             validator: FormBuilderValidators.username(allowSpace: true),
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            initialValue: currUser.customer01?.displayName,
+            initialValue: appUser?.displayName,
             decoration: InputDecoration(
               prefixIcon: Icon(
                 Icons.person_outline,

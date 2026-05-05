@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:scrapper/Services/AppUserServices/AppUserServices01.dart';
+import 'package:provider/provider.dart';
+import 'package:scrapper/Services/AppUserServices/AppUserService02.dart';
 import 'package:scrapper/theme/theme_extensions.dart';
 
 import '../../../Custome/CenterColumn/CenterColumn04.dart';
@@ -28,19 +28,20 @@ class _AddOtp01State extends State<AddOtp01> {
   }
 
   Future<void> submitHandler(String otp) async {
-    setState(() {
-      isLoading = true;
-      errorText = null;
-    });
-
-    /// Same validation logic as before
     if (otp.length != 6) {
       setError("Please enter a valid 6-digit OTP");
       return;
     }
 
+    setState(() {
+      isLoading = true;
+      errorText = null;
+    });
+
+    final appUser = context.read<AppUserServices02>(); // ✅ Provider
+
     try {
-      await AppUserServices01().verifyOtp(otp);
+      await appUser.verifyOtp(otp);
 
       widget.controller.nextPage(
         duration: const Duration(milliseconds: 500),
@@ -86,7 +87,7 @@ class _AddOtp01State extends State<AddOtp01> {
 
         context.gapXL,
 
-        /// 🔑 PIN FIELD (replaces FormBuilderField)
+        /// 🔑 PIN FIELD
         Column(
           mainAxisSize: MainAxisSize.min,
           children: [

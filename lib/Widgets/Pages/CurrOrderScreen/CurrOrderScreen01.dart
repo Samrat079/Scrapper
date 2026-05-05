@@ -3,7 +3,23 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:scrapper/Models/Orders/Order01.dart';
-import 'package:scrapper/Services/OrderServices/Order01Service.dart';
+import 'package:scrapper/Services/OrderServices/OrderService01.dart';
+import 'package:scrapper/Widgets/Custome/Drawers/Drawer01.dart';
+import 'package:scrapper/Widgets/Pages/CurrOrderScreen/Widget/AcceptedBottomSheet01.dart';
+import 'package:scrapper/Widgets/Pages/CurrOrderScreen/Widget/CurrOrderMap01.dart';
+import 'package:scrapper/Widgets/Pages/CurrOrderScreen/Widget/SearchingBottomSheet01.dart';
+import 'package:scrapper/theme/theme_extensions.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_animations/flutter_map_animations.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:provider/provider.dart';
+import 'package:scrapper/Models/Orders/Order01.dart';
+import 'package:scrapper/Services/OrderServices/OrderService02.dart';
+
+// import 'package:scrapper/Services/OrderServices/OrderService01.dart'; // ❌ OLD
 import 'package:scrapper/Widgets/Custome/Drawers/Drawer01.dart';
 import 'package:scrapper/Widgets/Pages/CurrOrderScreen/Widget/AcceptedBottomSheet01.dart';
 import 'package:scrapper/Widgets/Pages/CurrOrderScreen/Widget/CurrOrderMap01.dart';
@@ -22,21 +38,25 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01>
     with TickerProviderStateMixin {
   /// keys
   final GlobalKey<ScaffoldState> key = GlobalKey();
-  final orderService = Order01Service();
+
+  /// ❌ OLD ValueNotifier service
+  // final orderService = OrderService01();
 
   /// Controller
   final MapController mapController = MapController();
   final PanelController panelController = PanelController();
 
   /// Animation controller
-  late final _animatedMapController = AnimatedMapController(
-    vsync: this,
-    duration: const Duration(seconds: 1),
-    curve: Curves.easeIn,
-    cancelPreviousAnimations: true,
-  );
+  late final AnimatedMapController _animatedMapController =
+      AnimatedMapController(
+        vsync: this,
+        duration: const Duration(seconds: 1),
+        curve: Curves.easeIn,
+        cancelPreviousAnimations: true,
+      );
 
-  /// This updates the camera
+  /// ❌ OLD listener approach (unsafe)
+  /*
   void updateCamera() => orderService.addListener(() {
     final loc = orderService.value;
     if (loc == null || loc.sanitarian == null) return;
@@ -48,39 +68,69 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01>
     );
     _animatedMapController.animatedFitCamera(cameraFit: cameraFit);
   });
+  */
+
+  /// ✅ NEW camera updater
+  void _updateCamera(BuildContext context, Order01 order) {
+    if (order.sanitarian == null || order.sanitarian?.latLng == null) return;
+
+    final points = [order.destination, order.sanitarian!.latLng!];
+    final bounds = LatLngBounds.fromPoints(points);
+
+    final cameraFit = CameraFit.bounds(
+      bounds: bounds,
+      padding: context.paddingXXL,
+    );
+
+    _animatedMapController.animatedFitCamera(cameraFit: cameraFit);
+  }
 
   @override
   Widget build(BuildContext context) {
+    /// ❌ OLD ValueListenableBuilder
+    /*
     return ValueListenableBuilder<Order01?>(
       valueListenable: orderService,
       builder: (context, order, _) {
+    */
+
+    /// ✅ NEW Provider-based approach
+    return Consumer<OrderService02>(
+      builder: (context, orderService, _) {
+        final order = orderService.current;
+
         if (order == null) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
+
+        /// ✅ Safe post-frame camera update
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _updateCamera(context, order);
+        });
 
         return Scaffold(
           key: key,
           drawer: Drawer01(),
 
-          /// The appbar as if a floating button
-          /// opens the drawer but needs a scaffold key
+          /// Floating menu button
           floatingActionButton: FloatingActionButton(
             onPressed: () => key.currentState!.openDrawer(),
             backgroundColor: context.colorScheme.surface,
             foregroundColor: context.colorScheme.onSurface,
-            child: Icon(Icons.menu_rounded),
+            child: const Icon(Icons.menu_rounded),
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.miniStartTop,
 
-          /// body
+          /// Body
           body: SlidingUpPanel(
             controller: panelController,
 
-            /// The map
+            /// Map
             body: CurrOrderMap01(
               mapController: _animatedMapController.mapController,
-              onMapReady: updateCamera,
+              // ❌ OLD
+              onMapReady: (){},
               order: order,
             ),
 
@@ -92,22 +142,21 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01>
               top: context.radiusXL.bottomRight,
             ),
             color: context.colorScheme.surface,
+
             panelBuilder: (ScrollController controller) {
-              /// If there is not sanitarian
-              /// Remember to put return statement in this
+              /// Searching state
               if (order.status == Order01Status.requested &&
                   order.sanitarian == null) {
                 return SearchingBottomSheet01(
                   controller: controller,
                   order: order,
-                  onIncrement: () => orderService.updatePrice(order.price += 10),
-                  onDecrement: () => orderService.updatePrice(order.price -= 10),
+                  onIncrement: () => orderService.updatePrice(order.price + 10),
+                  onDecrement: () => orderService.updatePrice(order.price - 10),
                   onCancel: () => orderService.cancelCurrOrder(),
                 );
               }
 
-              /// If a sanitarian accepts the order
-              /// this has return so wont crash
+              /// Accepted state
               return AcceptedBottomSheet01(
                 controller: controller,
                 order: order,

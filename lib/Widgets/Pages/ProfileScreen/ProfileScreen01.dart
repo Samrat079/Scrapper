@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:scrapper/Services/AppUserServices/AppUserService02.dart';
 import 'package:scrapper/Services/AppUserServices/AppUserServices01.dart';
 import 'package:scrapper/Widgets/Custome/CardList01/CardList01.dart';
 import 'package:scrapper/theme/theme_extensions.dart';
@@ -14,10 +16,13 @@ class ProfileScreen01 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: ValueListenableBuilder(
-        valueListenable: AppUserServices01(),
+      // body: ValueListenableBuilder(
+      //   valueListenable: AppUserServices01(),
+      // final customer = appUser.customer01;
+
+      body: Consumer<AppUserServices02>(
         builder: (context, appUser, _) {
-          final customer = appUser.customer01;
+          final customer = appUser.current.customer01;
 
           if (customer == null) {
             return const Center(child: Text('Not logged in'));

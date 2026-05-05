@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:scrapper/Models/Address/Address02.dart';
-import 'package:scrapper/Services/OrderServices/Order01Service.dart';
+import 'package:scrapper/Services/OrderServices/OrderService01.dart';
+import 'package:scrapper/Services/OrderServices/OrderService02.dart';
 import 'package:scrapper/Widgets/Custome/Drawers/Drawer01.dart';
 import 'package:scrapper/Widgets/Custome/RichText/RichText01.dart';
 import 'package:scrapper/theme/theme_extensions.dart';
@@ -12,6 +14,7 @@ class HomeScreen01 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final orderService = context.read<OrderService02>();
     void placeOrder() async {
       final result = await Navigator.pushNamed(context, '/location01');
       if (result == null || result is! Map<String, dynamic>) return;
@@ -24,7 +27,7 @@ class HomeScreen01 extends StatelessWidget {
         houseNo: houseNo,
         phoneNumber: phoneNumber,
       );
-      Order01Service().placeOrder(price, address);
+      orderService.placeOrder(price, address);
     }
 
     return Scaffold(

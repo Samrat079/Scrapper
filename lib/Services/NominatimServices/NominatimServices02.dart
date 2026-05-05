@@ -3,7 +3,7 @@ import 'package:nominatim_flutter/model/response/nominatim_response.dart';
 import 'package:nominatim_flutter/nominatim_flutter.dart';
 import 'package:rxdart/rxdart.dart';
 
-class NominatimServices01 {
+class NominatimServices02 {
   // static final NominatimServices01 _instance = NominatimServices01._internal();
   //
   // NominatimServices01._internal();

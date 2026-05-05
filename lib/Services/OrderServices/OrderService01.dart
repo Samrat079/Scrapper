@@ -6,16 +6,16 @@ import 'package:flutter/foundation.dart';
 import 'package:scrapper/Models/Address/Address02.dart';
 import 'package:scrapper/Models/Orders/Order01.dart';
 import 'package:scrapper/Services/AppUserServices/AppUserServices01.dart';
-import 'package:scrapper/Services/OSRMServices/OSRMService01.dart';
+import 'package:scrapper/Services/OSRMServices/OSRMService02.dart';
 
-class Order01Service extends ValueNotifier<Order01?> {
+class OrderService01 extends ValueNotifier<Order01?> {
   /// Needs singleton as only one curr order
   /// can exist on one application
-  static final Order01Service _instance = Order01Service._internal();
+  static final OrderService01 _instance = OrderService01._internal();
 
-  Order01Service._internal() : super(null);
+  OrderService01._internal() : super(null);
 
-  factory Order01Service() => _instance;
+  factory OrderService01() => _instance;
 
   /// Random
   var rand = Random();
@@ -55,7 +55,7 @@ class Order01Service extends ValueNotifier<Order01?> {
       value = curr;
       return;
     }
-    curr.routesRes = await OSRMService01().getRouteGeoJson(
+    curr.routesRes = await OSRMService02().getRouteGeoJson(
       curr.sanitarian!.latLng!,
       curr.destination,
     );

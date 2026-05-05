@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_intl_phone_field/flutter_intl_phone_field.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:scrapper/Services/AppUserServices/AppUserServices01.dart';
+import 'package:provider/provider.dart';
+import 'package:scrapper/Services/AppUserServices/AppUserService02.dart';
 import 'package:scrapper/theme/theme_extensions.dart';
 
 import '../../../Custome/CenterColumn/CenterColumn04.dart';
@@ -12,7 +13,7 @@ class AddNumber01 extends StatefulWidget {
   final PageController _controller;
 
   const AddNumber01({super.key, required PageController controller})
-      : _controller = controller;
+    : _controller = controller;
 
   @override
   State<AddNumber01> createState() => _AddNumber01State();
@@ -25,31 +26,35 @@ class _AddNumber01State extends State<AddNumber01> {
   void clear() {
     _addNumberKey.currentState!.reset();
     widget._controller.previousPage(
-      duration: Duration(seconds: 1),
+      duration: const Duration(seconds: 1),
       curve: Curves.easeInOut,
     );
   }
 
-  void submitHandler() async {
-    setState(() => isLoading = true);
-    if (_addNumberKey.currentState?.saveAndValidate() ?? false) {
-      final number = _addNumberKey.currentState?.fields['Phone']?.value;
+  Future<void> submitHandler() async {
+    if (!(_addNumberKey.currentState?.saveAndValidate() ?? false)) return;
 
-      AppUserServices01()
-          .sendOtp(number)
-          .then(
-            (_) =>
-            widget._controller.nextPage(
-              duration: Duration(milliseconds: 500),
-              curve: Curves.easeInOut,
-            ),
-      )
-          .onError<FirebaseAuthException>((e, stackTrace) {
-        _addNumberKey.currentState?.fields['Phone']?.invalidate(
-          e.message.toString(),
-        );
+    final number = _addNumberKey.currentState?.fields['Phone']?.value;
+
+    setState(() => isLoading = true);
+
+    final appUser = context.read<AppUserServices02>();
+
+    try {
+      await appUser.sendOtp(number);
+
+      widget._controller.nextPage(
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    } on FirebaseAuthException catch (e) {
+      _addNumberKey.currentState?.fields['Phone']?.invalidate(
+        e.message ?? 'Invalid number',
+      );
+    } finally {
+      if (mounted) {
         setState(() => isLoading = false);
-      });
+      }
     }
   }
 
@@ -63,7 +68,8 @@ class _AddNumber01State extends State<AddNumber01> {
         children: [
           Image.asset('assets/Illustrations/login02.png', height: 256),
           context.gapMD,
-          Text(
+
+          const Text(
             'Verify Phone number',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -96,26 +102,27 @@ class _AddNumber01State extends State<AddNumber01> {
           if (isLoading)
             Column(
               children: [
-                LinearProgressIndicator(),
+                const LinearProgressIndicator(),
                 context.gapSM,
-                Text('Please wait', textAlign: TextAlign.center),
+                const Text('Please wait', textAlign: TextAlign.center),
                 context.gapMD,
               ],
             ),
 
-
           ElevatedButton(
             onPressed: isLoading ? null : submitHandler,
-            child: Text('Submit'),
+            child: const Text('Submit'),
           ),
+
           context.gapMD,
+
           ElevatedButton(
             onPressed: clear,
             style: ElevatedButton.styleFrom(
               backgroundColor: context.colorScheme.surfaceContainerHigh,
               foregroundColor: context.colorScheme.onSurface,
             ),
-            child: Text('Previous'),
+            child: const Text('Previous'),
           ),
         ],
       ),

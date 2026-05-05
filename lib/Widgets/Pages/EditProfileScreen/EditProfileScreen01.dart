@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:scrapper/Services/AppUserServices/AppUserServices01.dart';
 import 'package:scrapper/Widgets/Custome/CenterColumn/CenterColumn04.dart';
 import 'package:scrapper/Widgets/Custome/Forms/EditProfileForm01.dart';
 import 'package:scrapper/theme/theme_extensions.dart';
 
+import '../../../Services/AppUserServices/AppUserService02.dart';
 
 class EditProfileScreen01 extends StatelessWidget {
   const EditProfileScreen01({super.key});
@@ -21,6 +23,7 @@ class EditProfileScreen01 extends StatelessWidget {
         ),
         context.gapMD,
         EditProfileForm01(
+          appUserService: context.read<AppUserServices02>(),
           onSubmit: (data) => AppUserServices01()
               .updateAppUser(data['displayName'])
               .then((_) => Navigator.pop(context)),

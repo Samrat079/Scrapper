@@ -6,11 +6,14 @@ import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:nominatim_flutter/model/response/nominatim_response.dart';
+import 'package:provider/provider.dart';
 import 'package:scrapper/Models/Address/Address02.dart';
+import 'package:scrapper/Services/AppUserServices/AppUserService02.dart';
 import 'package:scrapper/Services/AppUserServices/AppUserServices01.dart';
 import 'package:scrapper/Services/PriceServices/PriceService01.dart';
 import 'package:scrapper/Widgets/Custome/SearchDelegate/encodingDelegate01.dart';
 import 'package:scrapper/theme/theme_extensions.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../Custome/CenterColumn/CenterColumn04.dart';
 
@@ -42,7 +45,7 @@ class _LocationForm01State extends State<LocationForm01>
     final lon = double.tryParse(res.lon ?? '');
     if (lat == null || lon == null) return;
     final newLocation = LatLng(lat, lon);
-    final newCost = PriceService01().basePrice();
+    final newCost = context.read<PriceService01>().basePrice();
     _animatedMapController.animateTo(dest: newLocation, zoom: 18);
     _formKey.currentState?.fields['place']?.didChange(res.displayName);
     setState(() {
@@ -77,125 +80,136 @@ class _LocationForm01State extends State<LocationForm01>
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        leading: IconButton.filled(
-          onPressed: () => Navigator.pop(context),
-          icon: Icon(Icons.arrow_back),
-          style: IconButton.styleFrom(
-            backgroundColor: context.colorScheme.surface,
-          ),
-        ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniStartTop,
+      floatingActionButton: FloatingActionButton(
+        heroTag: null,
+        onPressed: () => Navigator.pop(context),
+        backgroundColor: context.colorScheme.surface,
+        foregroundColor: context.colorScheme.onSurface,
+        child: const Icon(Icons.arrow_back),
       ),
 
-      body: FlutterMap(
-        mapController: _animatedMapController.mapController,
-        options: MapOptions(initialCenter: _defaultLocation, initialZoom: 18),
-        children: [
-          TileLayer(
-            urlTemplate: "https://mt.google.com/vt/lyrs=m&x={x}&y={y}&z={z}",
-            userAgentPackageName: "com.example.scrapper",
-          ),
+      body: SlidingUpPanel(
+        body: FlutterMap(
+          mapController: _animatedMapController.mapController,
+          options: MapOptions(initialCenter: _defaultLocation, initialZoom: 18),
+          children: [
+            TileLayer(
+              urlTemplate: "https://mt.google.com/vt/lyrs=m&x={x}&y={y}&z={z}",
+              userAgentPackageName: "com.example.scrapper",
+            ),
 
-          MarkerLayer(
-            markers: [
-              if (_selectedLocation != null)
-                Marker(
-                  point: _selectedLocation!,
-                  child: Icon(
-                    Icons.location_pin,
-                    size: 40,
-                    color: context.colorScheme.secondary,
-                  ),
-                ),
-            ],
-          ),
-        ],
-      ),
-
-      bottomSheet: BottomSheet(
-        onClosing: () {},
-        builder: (context) => FormBuilder(
-          key: _formKey,
-          child: CenterColumn04(
-            children: [
-              /// Price
-              if (cost > 0)
-                Text(
-                  "Rs.${cost.toStringAsFixed(2)}",
-                  style: TextStyle(fontSize: 32),
-                ),
-              context.gapMD,
-
-              /// location
-              FormBuilderTextField(
-                name: 'place',
-                readOnly: true,
-                validator: FormBuilderValidators.required(),
-
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                onTap: () => showSearch<NominatimResponse?>(
-                  context: context,
-                  delegate: EncodingDelegate01(),
-                ).then((place) => _updatePlace(place)),
-                decoration: InputDecoration(
-                  prefixIcon: Icon(
-                    Icons.location_pin,
-                    color: context.colorScheme.secondary,
-                  ),
-                  suffixIcon: const Icon(Icons.edit_outlined),
-                  labelText: 'Area/Locality',
-                  filled: true,
-                  fillColor: context.colorScheme.surfaceContainer,
-                ),
-              ),
-
-              context.gapMD,
-
-              /// house floor
-              FormBuilderTextField(
-                name: 'houseNo',
-                validator: FormBuilderValidators.required(),
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(
-                    Icons.house_outlined,
-                    color: context.colorScheme.secondary,
-                  ),
-                  labelText: 'House no., Flat, Floor',
-                  filled: true,
-                  fillColor: context.colorScheme.surfaceContainer,
-                ),
-              ),
-              context.gapMD,
-
-              /// Contact number
-              FormBuilderField(
-                name: 'phoneNumber',
-                initialValue: AppUserServices01().current.auth?.phoneNumber,
-                builder: (field) {
-                  return IntlPhoneField(
-                    initialValue: field.value,
-                    onChanged: (phone) => field.didChange(phone.completeNumber),
-                    initialCountryCode: 'IN',
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: context.colorScheme.surfaceContainer,
-                      labelText: 'Contact number',
-                      helperText:
-                          'The sanitation worker will use this to contact you',
+            MarkerLayer(
+              markers: [
+                if (_selectedLocation != null)
+                  Marker(
+                    point: _selectedLocation!,
+                    child: Icon(
+                      Icons.location_pin,
+                      size: 40,
+                      color: context.colorScheme.secondary,
                     ),
-                  );
-                },
-              ),
-              context.gapMD,
+                  ),
+              ],
+            ),
+          ],
+        ),
 
-              /// submit button
-              ElevatedButton(
-                onPressed: submitHandler,
-                child: const Text('Submit'),
-              ),
-            ],
+        ///////////////// Panel /////////////////////
+        parallaxEnabled: true,
+        defaultPanelState: PanelState.OPEN,
+        borderRadius: BorderRadius.vertical(top: context.radiusXL.topLeft),
+        color: context.colorScheme.surface,
+        panelBuilder: (ScrollController controller) => SafeArea(
+          child: FormBuilder(
+            key: _formKey,
+            child: CenterColumn04(
+              scrollController: controller,
+              children: [
+                /// Top form
+                Icon(Icons.add_location_alt_outlined, size: 80),
+                context.gapLG,
+
+                Text(
+                  "Choose the location where do you want the pick up",
+                  style: context.textTheme.titleMedium,
+                ),
+                context.gapMD,
+
+                /// location
+                FormBuilderTextField(
+                  name: 'place',
+                  readOnly: true,
+                  validator: FormBuilderValidators.required(),
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  onTap: () => showSearch<NominatimResponse?>(
+                    context: context,
+                    delegate: EncodingDelegate01(),
+                  ).then((place) => _updatePlace(place)),
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(
+                      Icons.location_pin,
+                      color: context.colorScheme.primary,
+                    ),
+                    suffixIcon: const Icon(Icons.edit_outlined),
+                    labelText: 'Area/Locality',
+                    filled: true,
+                    fillColor: context.colorScheme.surfaceContainer,
+                  ),
+                ),
+
+                context.gapMD,
+
+                /// house floor
+                FormBuilderTextField(
+                  name: 'houseNo',
+                  validator: FormBuilderValidators.required(),
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(
+                      Icons.house_outlined,
+                      color: context.colorScheme.primary,
+                    ),
+                    labelText: 'House no., Flat, Floor',
+                    filled: true,
+                    fillColor: context.colorScheme.surfaceContainer,
+                  ),
+                ),
+                context.gapMD,
+
+                /// Contact number
+                FormBuilderField(
+                  name: 'phoneNumber',
+                  initialValue: context
+                      .read<AppUserServices02>()
+                      .current
+                      .customer01
+                      ?.phoneNumber,
+                  builder: (field) {
+                    return IntlPhoneField(
+                      initialValue: field.value,
+                      onChanged: (phone) =>
+                          field.didChange(phone.completeNumber),
+                      initialCountryCode: 'IN',
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: context.colorScheme.surfaceContainer,
+                        labelText: 'Contact number',
+                        helperText:
+                            'The sanitation worker will use this to contact you',
+                      ),
+                    );
+                  },
+                ),
+                context.gapMD,
+
+                /// submit button
+                ElevatedButton(
+                  onPressed: submitHandler,
+                  child: Text(cost > 0 ? "Rs.$cost" : "Submit"),
+                ),
+              ],
+            ),
           ),
         ),
       ),

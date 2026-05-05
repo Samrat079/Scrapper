@@ -50,7 +50,7 @@ dependencies:
   geolocator: ^14.0.2
   nominatim_flutter: ^0.0.8
   rxdart: ^0.28.0
-  sliding_up_panel:
+  sliding_up_panel: ^2.0.0+1
   duration:
 
   http: any

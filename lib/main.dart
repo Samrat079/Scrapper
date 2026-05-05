@@ -10,7 +10,7 @@ import 'package:scrapper/theme/app_theme.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await AppUserServices01().init();
+  // await AppUserServices01().init();
   runApp(MultiProvider(providers: providers01, child: const MyApp()));
 }
 
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       initialRoute: '/',
-      onGenerateRoute: RouteGen.generateRoute,
+      onGenerateRoute: (settings) => generateRoute(settings, context),
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system,
