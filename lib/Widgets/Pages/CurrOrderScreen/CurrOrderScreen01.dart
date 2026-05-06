@@ -4,6 +4,7 @@ import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:scrapper/Models/Orders/Order01.dart';
 import 'package:scrapper/Services/OrderServices/OrderService01.dart';
+import 'package:scrapper/Widgets/Custome/CenterColumn/CenterColumn04.dart';
 import 'package:scrapper/Widgets/Custome/Drawers/Drawer01.dart';
 import 'package:scrapper/Widgets/Pages/CurrOrderScreen/Widget/AcceptedBottomSheet01.dart';
 import 'package:scrapper/Widgets/Pages/CurrOrderScreen/Widget/CurrOrderMap01.dart';
@@ -108,7 +109,7 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01>
             ),
 
             parallaxEnabled: true,
-            parallaxOffset: 0.3,
+            parallaxOffset: 0.5,
             backdropTapClosesPanel: true,
             defaultPanelState: PanelState.OPEN,
             borderRadius: BorderRadius.vertical(
@@ -126,6 +127,34 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01>
                   onIncrement: () => orderService.updatePrice(order.price + 10),
                   onDecrement: () => orderService.updatePrice(order.price - 10),
                   onCancel: () => orderService.cancelCurrOrder(),
+                );
+              }
+
+              if (order.status == Order01Status.cancelled) {
+                return SafeArea(
+                  child: CenterColumn04(
+                    children: [
+                      Text("Order canceled"),
+                      ElevatedButton(
+                        onPressed: orderService.stop,
+                        child: Text("Done"),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+              if (order.status == Order01Status.completed) {
+                return SafeArea(
+                  child: CenterColumn04(
+                    children: [
+                      Text("Order completed"),
+                      ElevatedButton(
+                        onPressed: orderService.stop,
+                        child: Text("Done"),
+                      ),
+                    ],
+                  ),
                 );
               }
 

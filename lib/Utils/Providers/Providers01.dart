@@ -20,15 +20,23 @@ final providers01 = [
 
   /// Dependent classes
   ChangeNotifierProvider(
-    create: (context) =>
-        AppUserServices02(auth: auth, firestore: firestore)..init(),
+    create: (context) => AppUserServices02(auth: auth, firestore: firestore),
+
+    /// experiment with non init
   ),
 
   ChangeNotifierProvider(
-    create: (context) => OrderService02(
-      appUser: context.read<AppUserServices02>(),
-      osrm: context.read<OSRMService02>(),
-      firestore: firestore,
-    )..init(),
+    create: (context) {
+      final orderService = OrderService02(
+        appUserService: context.read<AppUserServices02>(),
+        osrm: context.read<OSRMService02>(),
+        firestore: firestore,
+      );
+
+      /// 🔥 Inject into AppUserService
+      context.read<AppUserServices02>().setOrderService(orderService);
+
+      return orderService;
+    },
   ),
 ];
