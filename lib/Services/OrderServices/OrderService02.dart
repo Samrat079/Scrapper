@@ -36,7 +36,6 @@ class OrderService02 extends ChangeNotifier {
         toFirestore: (model, _) => model.toJson(),
       );
 
-  /// INIT (you decided to keep it 👍)
   void init() {
     final uid = appUser.current.uid;
 
@@ -104,6 +103,7 @@ class OrderService02 extends ChangeNotifier {
 
   Future<void> updatePrice(double price) async {
     if (_current == null) return;
+    if (price < 10) return;
 
     await _ref.doc(_current!.uid).update({"price": price});
     _current!.price = price;

@@ -10,7 +10,6 @@ import 'package:scrapper/theme/app_theme.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  // await AppUserServices01().init();
   runApp(MultiProvider(providers: providers01, child: const MyApp()));
 }
 

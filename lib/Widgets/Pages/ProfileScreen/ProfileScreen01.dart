@@ -16,13 +16,13 @@ class ProfileScreen01 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
+
       // body: ValueListenableBuilder(
       //   valueListenable: AppUserServices01(),
       // final customer = appUser.customer01;
-
       body: Consumer<AppUserServices02>(
-        builder: (context, appUser, _) {
-          final customer = appUser.current.customer01;
+        builder: (context, appUserService, _) {
+          final customer = appUserService.current.customer01;
 
           if (customer == null) {
             return const Center(child: Text('Not logged in'));
@@ -120,7 +120,7 @@ class ProfileScreen01 extends StatelessWidget {
                     iconColor: Theme.of(context).colorScheme.error,
                     leading: const Icon(Icons.logout_outlined),
                     title: const Text('Logout'),
-                    onTap: () => AppUserServices01().logout().then(
+                    onTap: () => appUserService.logout().then(
                       (_) => Navigator.pop(context),
                     ),
                   ),
@@ -129,7 +129,7 @@ class ProfileScreen01 extends StatelessWidget {
                     iconColor: Theme.of(context).colorScheme.error,
                     leading: const Icon(Icons.delete_outline),
                     title: const Text('Delete profile'),
-                    onTap: () => AppUserServices01().delete().then(
+                    onTap: () => appUserService.delete().then(
                       (_) => Navigator.pop(context),
                     ),
                   ),

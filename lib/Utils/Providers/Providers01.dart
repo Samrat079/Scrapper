@@ -29,6 +29,6 @@ final providers01 = [
       appUser: context.read<AppUserServices02>(),
       osrm: context.read<OSRMService02>(),
       firestore: firestore,
-    ),
+    )..init(),
   ),
 ];

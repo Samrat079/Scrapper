@@ -15,6 +15,7 @@ import 'package:scrapper/Widgets/Custome/SearchDelegate/encodingDelegate01.dart'
 import 'package:scrapper/theme/theme_extensions.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
+import '../../../Services/NominatimServices/NominatimServices02.dart';
 import '../../Custome/CenterColumn/CenterColumn04.dart';
 
 class LocationForm01 extends StatefulWidget {
@@ -27,8 +28,13 @@ class LocationForm01 extends StatefulWidget {
 class _LocationForm01State extends State<LocationForm01>
     with TickerProviderStateMixin {
   late final AnimatedMapController _animatedMapController;
+  late final PriceService01 priceService;
+  late final NominatimServices02 nominatim;
+  late final AppUserServices02 appUserService;
+
   final LatLng _defaultLocation = const LatLng(22.572645, 88.363892);
   final _formKey = GlobalKey<FormBuilderState>();
+  final _panelController = PanelController();
   double cost = 0;
   LatLng? _selectedLocation;
   NominatimResponse? _selectedPlace;
@@ -36,6 +42,9 @@ class _LocationForm01State extends State<LocationForm01>
   @override
   void initState() {
     super.initState();
+    priceService = context.read<PriceService01>();
+    nominatim = context.read<NominatimServices02>();
+    appUserService = context.read<AppUserServices02>();
     _animatedMapController = AnimatedMapController(vsync: this);
   }
 
@@ -45,7 +54,7 @@ class _LocationForm01State extends State<LocationForm01>
     final lon = double.tryParse(res.lon ?? '');
     if (lat == null || lon == null) return;
     final newLocation = LatLng(lat, lon);
-    final newCost = context.read<PriceService01>().basePrice();
+    final newCost = priceService.basePrice();
     _animatedMapController.animateTo(dest: newLocation, zoom: 18);
     _formKey.currentState?.fields['place']?.didChange(res.displayName);
     setState(() {
@@ -70,6 +79,25 @@ class _LocationForm01State extends State<LocationForm01>
     }
   }
 
+  void _onMapTap(LatLng latLng) async {
+    setState(() {
+      _selectedLocation = latLng;
+      cost = priceService.basePrice();
+    });
+
+    _animatedMapController.animateTo(
+      dest: latLng,
+      zoom: 18,
+      duration: Duration(seconds: 1),
+    );
+
+    _panelController.open();
+    _formKey.currentState?.fields['place']?.didChange("Loading...");
+    final place = await nominatim.reverse(latLng);
+    setState(() => _selectedPlace = place);
+    _formKey.currentState?.fields['place']?.didChange(place.displayName);
+  }
+
   @override
   void dispose() {
     _animatedMapController.dispose();
@@ -82,7 +110,6 @@ class _LocationForm01State extends State<LocationForm01>
       extendBodyBehindAppBar: true,
       floatingActionButtonLocation: FloatingActionButtonLocation.miniStartTop,
       floatingActionButton: FloatingActionButton(
-        heroTag: null,
         onPressed: () => Navigator.pop(context),
         backgroundColor: context.colorScheme.surface,
         foregroundColor: context.colorScheme.onSurface,
@@ -92,7 +119,11 @@ class _LocationForm01State extends State<LocationForm01>
       body: SlidingUpPanel(
         body: FlutterMap(
           mapController: _animatedMapController.mapController,
-          options: MapOptions(initialCenter: _defaultLocation, initialZoom: 18),
+          options: MapOptions(
+            initialCenter: _defaultLocation,
+            initialZoom: 18,
+            onTap: (tapPosition, point) => _onMapTap(point),
+          ),
           children: [
             TileLayer(
               urlTemplate: "https://mt.google.com/vt/lyrs=m&x={x}&y={y}&z={z}",
@@ -116,8 +147,10 @@ class _LocationForm01State extends State<LocationForm01>
         ),
 
         ///////////////// Panel /////////////////////
+        controller: _panelController,
         parallaxEnabled: true,
         defaultPanelState: PanelState.OPEN,
+        parallaxOffset: 0.3,
         borderRadius: BorderRadius.vertical(top: context.radiusXL.topLeft),
         color: context.colorScheme.surface,
         panelBuilder: (ScrollController controller) => SafeArea(
@@ -180,11 +213,7 @@ class _LocationForm01State extends State<LocationForm01>
                 /// Contact number
                 FormBuilderField(
                   name: 'phoneNumber',
-                  initialValue: context
-                      .read<AppUserServices02>()
-                      .current
-                      .customer01
-                      ?.phoneNumber,
+                  initialValue: appUserService.current.customer01?.phoneNumber,
                   builder: (field) {
                     return IntlPhoneField(
                       initialValue: field.value,

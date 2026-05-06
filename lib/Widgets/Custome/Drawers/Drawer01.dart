@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:scrapper/Services/AppUserServices/AppUserService02.dart';
 import 'package:scrapper/Services/AppUserServices/AppUserServices01.dart';
 
 class Drawer01 extends StatelessWidget {
@@ -6,6 +8,7 @@ class Drawer01 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appUserService = context.read<AppUserServices02>();
     return Drawer(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -16,7 +19,7 @@ class Drawer01 extends StatelessWidget {
             onTap: () => Navigator.pushNamed(
               context,
               '/profile',
-              arguments: AppUserServices01().current.customer01,
+              // arguments: AppUserServices01().current.customer01,
             ),
           ),
           // ListTile(
@@ -33,7 +36,7 @@ class Drawer01 extends StatelessWidget {
             textColor: Theme.of(context).colorScheme.error,
             leading: Icon(Icons.logout_outlined),
             title: Text('Logout'),
-            onTap: () => AppUserServices01().logout().then(
+            onTap: () => appUserService.logout().then(
               (_) => Navigator.pushNamed(context, '/login'),
             ),
           ),

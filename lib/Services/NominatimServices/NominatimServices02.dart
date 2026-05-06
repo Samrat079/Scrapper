@@ -1,17 +1,10 @@
+import 'package:latlong2/latlong.dart';
 import 'package:nominatim_flutter/model/request/request.dart';
 import 'package:nominatim_flutter/model/response/nominatim_response.dart';
 import 'package:nominatim_flutter/nominatim_flutter.dart';
 import 'package:rxdart/rxdart.dart';
 
 class NominatimServices02 {
-  // static final NominatimServices01 _instance = NominatimServices01._internal();
-  //
-  // NominatimServices01._internal();
-  //
-  // factory NominatimServices01() {
-  //   return _instance;
-  // }
-
   final nominatim = NominatimFlutter.instance;
 
   Future<List<NominatimResponse>> searchByString(String query) =>
@@ -29,4 +22,8 @@ class NominatimServices02 {
           .where((query) => query.isNotEmpty)
           .distinct()
           .asyncMap((query) => searchByString(query));
+
+  Future<NominatimResponse> reverse(LatLng latlng) => nominatim.reverse(
+    reverseRequest: ReverseRequest(lat: latlng.latitude, lon: latlng.longitude),
+  );
 }

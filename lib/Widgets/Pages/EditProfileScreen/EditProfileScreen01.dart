@@ -11,25 +11,28 @@ class EditProfileScreen01 extends StatelessWidget {
   const EditProfileScreen01({super.key});
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(),
-    body: CenterColumn04(
-      centerVertically: true,
-      children: [
-        Text(
-          'Edit user',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        context.gapMD,
-        EditProfileForm01(
-          appUserService: context.read<AppUserServices02>(),
-          onSubmit: (data) => AppUserServices01()
-              .updateAppUser(data['displayName'])
-              .then((_) => Navigator.pop(context)),
-          onCancel: () => Navigator.pop(context),
-        ),
-      ],
-    ),
-  );
+  Widget build(BuildContext context) {
+    final appUserService = context.read<AppUserServices02>();
+    return Scaffold(
+      appBar: AppBar(),
+      body: CenterColumn04(
+        centerVertically: true,
+        children: [
+          Text(
+            'Edit user',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          context.gapMD,
+          EditProfileForm01(
+            appUserService: appUserService,
+            onSubmit: (data) => appUserService
+                .updateAppUser(data['displayName'])
+                .then((_) => Navigator.pop(context)),
+            onCancel: () => Navigator.pop(context),
+          ),
+        ],
+      ),
+    );
+  }
 }

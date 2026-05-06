@@ -39,9 +39,6 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01>
   /// keys
   final GlobalKey<ScaffoldState> key = GlobalKey();
 
-  /// ❌ OLD ValueNotifier service
-  // final orderService = OrderService01();
-
   /// Controller
   final MapController mapController = MapController();
   final PanelController panelController = PanelController();
@@ -54,21 +51,6 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01>
         curve: Curves.easeIn,
         cancelPreviousAnimations: true,
       );
-
-  /// ❌ OLD listener approach (unsafe)
-  /*
-  void updateCamera() => orderService.addListener(() {
-    final loc = orderService.value;
-    if (loc == null || loc.sanitarian == null) return;
-    final List<LatLng> points = [loc.destination, loc.sanitarian!.latLng!];
-    final bounds = LatLngBounds.fromPoints(points);
-    final cameraFit = CameraFit.bounds(
-      bounds: bounds,
-      padding: context.paddingXXL,
-    );
-    _animatedMapController.animatedFitCamera(cameraFit: cameraFit);
-  });
-  */
 
   /// ✅ NEW camera updater
   void _updateCamera(BuildContext context, Order01 order) {
@@ -87,14 +69,6 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01>
 
   @override
   Widget build(BuildContext context) {
-    /// ❌ OLD ValueListenableBuilder
-    /*
-    return ValueListenableBuilder<Order01?>(
-      valueListenable: orderService,
-      builder: (context, order, _) {
-    */
-
-    /// ✅ NEW Provider-based approach
     return Consumer<OrderService02>(
       builder: (context, orderService, _) {
         final order = orderService.current;
@@ -103,7 +77,7 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01>
           return const Center(child: CircularProgressIndicator());
         }
 
-        /// ✅ Safe post-frame camera update
+        /// Need to have this coz on map ready doesn't works
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _updateCamera(context, order);
         });
@@ -129,8 +103,7 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01>
             /// Map
             body: CurrOrderMap01(
               mapController: _animatedMapController.mapController,
-              // ❌ OLD
-              onMapReady: (){},
+              onMapReady: () {},
               order: order,
             ),
 

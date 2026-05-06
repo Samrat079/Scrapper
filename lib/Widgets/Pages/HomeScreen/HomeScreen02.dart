@@ -10,9 +10,6 @@ class HomeScreen02 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return ValueListenableBuilder(
-    //   valueListenable: Order01Service(),
-
     return Consumer<OrderService02>(
       builder: (context, order, _) {
         if (order.current == null) return HomeScreen01();
