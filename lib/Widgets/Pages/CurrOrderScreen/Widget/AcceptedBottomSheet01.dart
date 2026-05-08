@@ -45,7 +45,7 @@ class AcceptedBottomSheet01 extends StatelessWidget {
                     maxUnits: 2, tersity: DurationTersity.minute)}",
               ),
               trailing: IconButton(onPressed: () =>
-                  launchUrl(Uri.parse("tel:${order.customer.phoneNumber}")),
+                  launchUrl(Uri.parse("tel:${order.sanitarian?.phoneNumber}")),
                   icon: Icon(Icons.call)),
             ),
             Divider(),
@@ -94,8 +94,8 @@ class AcceptedBottomSheet01 extends StatelessWidget {
             ElevatedButton(
               onPressed: onCancel,
               style: ElevatedButton.styleFrom(
-                backgroundColor: context.colorScheme.error,
-                foregroundColor: context.colorScheme.onError,
+                backgroundColor: context.colorScheme.errorContainer,
+                foregroundColor: context.colorScheme.onErrorContainer,
               ),
               child: const Text('Cancel'),
             ),

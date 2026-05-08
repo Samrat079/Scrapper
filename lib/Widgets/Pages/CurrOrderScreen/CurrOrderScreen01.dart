@@ -53,7 +53,7 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01>
         cancelPreviousAnimations: true,
       );
 
-  /// ✅ NEW camera updater
+  ///  NEW camera updater
   void _updateCamera(BuildContext context, Order01 order) {
     if (order.sanitarian == null || order.sanitarian?.latLng == null) return;
 
@@ -62,7 +62,7 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01>
 
     final cameraFit = CameraFit.bounds(
       bounds: bounds,
-      padding: context.paddingXXL,
+      padding: EdgeInsets.all(180),
     );
 
     _animatedMapController.animatedFitCamera(cameraFit: cameraFit);
@@ -115,7 +115,7 @@ class _CurrOrderScreen01State extends State<CurrOrderScreen01>
             borderRadius: BorderRadius.vertical(
               top: context.radiusXL.bottomRight,
             ),
-            color: context.colorScheme.surface,
+            color: context.colorScheme.surfaceContainerLowest,
 
             panelBuilder: (ScrollController controller) {
               /// Searching state

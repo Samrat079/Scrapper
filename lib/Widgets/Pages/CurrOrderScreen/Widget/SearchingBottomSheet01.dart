@@ -22,11 +22,11 @@ class SearchingBottomSheet01 extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SafeArea(
     child: CenterColumn04(
-      padding: context.paddingLG,
+      // padding: context.paddingLG,
       scrollController: controller,
       children: [
-        Image.asset('assets/Search/search_01.png', height: 200),
-        context.gapMD,
+        // Image.asset('assets/Search/search_01.png', height: 200),
+        // context.gapMD,
         const Text(
           'Looking for sanitarians in your area',
           textAlign: TextAlign.center,
@@ -44,7 +44,7 @@ class SearchingBottomSheet01 extends StatelessWidget {
               title: Text(order.address.place.name!),
               subtitle: Text(
                 order.address.place.displayName!,
-                maxLines: 3,
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
             ),

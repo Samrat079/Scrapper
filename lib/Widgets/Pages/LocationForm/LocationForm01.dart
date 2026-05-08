@@ -87,7 +87,7 @@ class _LocationForm01State extends State<LocationForm01>
 
     _animatedMapController.animateTo(
       dest: latLng,
-      zoom: 18,
+      zoom: 14,
       duration: Duration(seconds: 1),
     );
 
@@ -138,7 +138,7 @@ class _LocationForm01State extends State<LocationForm01>
                     child: Icon(
                       Icons.location_pin,
                       size: 40,
-                      color: context.colorScheme.secondary,
+                      color: Colors.red,
                     ),
                   ),
               ],
@@ -152,7 +152,7 @@ class _LocationForm01State extends State<LocationForm01>
         defaultPanelState: PanelState.OPEN,
         parallaxOffset: 0.3,
         borderRadius: BorderRadius.vertical(top: context.radiusXL.topLeft),
-        color: context.colorScheme.surface,
+        color: context.colorScheme.surfaceContainerLowest,
         panelBuilder: (ScrollController controller) => SafeArea(
           child: FormBuilder(
             key: _formKey,
