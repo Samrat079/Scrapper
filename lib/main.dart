@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:scrapper/Services/AppUserServices/AppUserServices01.dart';
 import 'package:scrapper/Utils/Providers/Providers01.dart';
 import 'package:scrapper/Utils/Router/RouteGen.dart';
 import 'package:scrapper/firebase_options.dart';
